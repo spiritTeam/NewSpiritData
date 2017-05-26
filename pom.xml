@@ -37,7 +37,6 @@
       <scope>system</scope>
       <systemPath>${projectDir}/lib/BasicPlat-0.1.0.11.jar</systemPath>
     </dependency>
-
     <!-- Junit组件 -->
     <dependency>
       <groupId>junit</groupId>
@@ -110,12 +109,6 @@
       <scope>system</scope>
       <systemPath>${projectDir}/lib/pinyin4j-2.5.0.jar</systemPath>
     </dependency>
-    <!-- servlet-api 否则，用Maven install报错 -->
-    <dependency>
-      <groupId>org.apache.tomcat</groupId>
-      <artifactId>servlet-api</artifactId>
-      <version>6.0.39</version>
-    </dependency>
     <!-- Redis -->
     <dependency>
       <groupId>redis.clients</groupId>
@@ -130,6 +123,11 @@
   </dependencies>
 
   <build>
+    <!-- 设置源代码的根目录 -->
+    <sourceDirectory>${projectDir}\src</sourceDirectory>
+    <!-- 设置源代码编译后的字节代码的目录 -->
+    <outputDirectory>${projectDir}\WebContent\WEB-INF\classes</outputDirectory>
+
     <!-- 这里定义的资源将作为资源拷贝或打包到目标中。所有的配置文件(xml,propertis)都会按目录进行打包了 -->
     <resources>
       <resource>

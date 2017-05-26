@@ -1,2 +1,8 @@
 /build/
-/target/
+target/
+
+/WebContent/WEB-INF/classes
+/WebContent/WEB-INF/lib
+/logs
+
+
