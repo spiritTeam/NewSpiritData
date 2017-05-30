@@ -21,4 +21,7 @@
     <context:exclude-filter type="assignable" expression="com.spiritdata.passport.UGA.service.UserService"/>
     <context:exclude-filter type="assignable" expression="com.spiritdata.passport.UGA.service.AuthorityService"/>
   </context:component-scan>
+
+  <context:annotation-config/>
+  <aop:aspectj-autoproxy/>
 </beans>

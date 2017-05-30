@@ -70,30 +70,19 @@
     <filter-name>CharacterEncodingFilter</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
-  <!-- 登录
+  <!-- 登录 -->
   <filter>
     <filter-name>loginFilter</filter-name>
-    <filter-class>com.spiritdata.framework.component.login.web.LoginFilter</filter-class>
-    <init-param> -->
-      <param-name>ingores</param-name>
-      <!--
-      <param-value>login,logout.do,asIndex.jsp,fileUpLoad.do,templet,jsonD,plugins,images,checkCodeImges,getReport.do,demo,report</param-value>
-      --><!--
-      <param-value>/, \\</param-value>
-    </init-param>
+    <filter-class>com.spiritdata.commons.web.LoginFilter</filter-class>
     <init-param>
-      <param-name>noLogin</param-name>
-      <param-value>/login/noLogin.jsp</param-value>
-    </init-param>
-    <init-param>
-      <param-name>hasNewLogin</param-name>
-      <param-value>/login/hasNewLogin.jsp</param-value>
+      <param-name>ignoreRegex</param-name>
+      <param-value>index.htm</param-value>
     </init-param>
   </filter>
   <filter-mapping>
     <filter-name>loginFilter</filter-name>
     <url-pattern>/*</url-pattern>
-  </filter-mapping> -->
+  </filter-mapping>
   <!-- end过滤器 -->
 
   <!-- begin Servlet设置 -->

@@ -59,13 +59,19 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-webmvc</artifactId>
-      <version>4.2.4.RELEASE</version>
+      <version>4.3.8.RELEASE</version>
     </dependency>
+    <!-- Spring aop
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-aop</artifactId>
+      <version>4.3.8.RELEASE</version>
+    </dependency> -->
     <!-- Spring Jdbc -->
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-jdbc</artifactId>
-      <version>4.2.4.RELEASE</version>
+      <version>4.3.8.RELEASE</version>
     </dependency>
     <!-- MyBatis组件 --><!-- Spring+MyBatis对接插件 -->
     <dependency>
