@@ -8,7 +8,6 @@ import com.spiritdata.framework.UGA.UgaUser;
 import com.spiritdata.framework.component.login.service.LoginService;
 
 public class LoginServiceImpl implements LoginService {
-
     @Override
     public Map<String, Object> afterUserLoginOk(UgaUser arg0, HttpServletRequest arg1) {
         return null;

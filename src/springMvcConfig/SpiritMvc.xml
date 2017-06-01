@@ -15,6 +15,8 @@
     http://www.springframework.org/schema/aop
     http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
     
+  <context:annotation-config/>
+
   <!-- 符合Spring3.5之后的配置；支持自动把object转变为json串的配置 -->
   <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"/>
   <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
@@ -39,9 +41,17 @@
     </property>
   </bean>
 
-  <bean id="loginService" class="com.spiritdata.passport.login.service.LoginServiceImpl"/>
-
-  <context:component-scan base-package="com.spiritdata" use-default-filters="false">
+  <context:component-scan base-package="com.spiritdata.passport" use-default-filters="false">
     <context:include-filter type="regex" expression=".*.web.*Controller"/>
   </context:component-scan>
+
+  <!-- 以下为AOP配置 -->
+  <aop:aspectj-autoproxy proxy-target-class="true"/>
+  <bean id="logHandler" class="com.spiritdata.commons.web.LogAspectSpring" />
+  <!--<aop:config proxy-target-class="true">
+     <aop:aspect id="log" ref="logHandler">
+       <aop:pointcut id="logApi" expression="execution(* com.spiritdata.passport.web.TestController.*(..))" />
+       <aop:before method="doServiceLog" pointcut-ref="logApi" />
+     </aop:aspect>
+  </aop:config>-->
 </beans>
