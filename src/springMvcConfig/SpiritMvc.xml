@@ -14,8 +14,10 @@
     http://www.springframework.org/schema/mvc/spring-mvc.xsd
     http://www.springframework.org/schema/aop
     http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
-    
+
   <context:annotation-config/>
+  <mvc:default-servlet-handler/>
+  <mvc:annotation-driven/>
 
   <!-- 符合Spring3.5之后的配置；支持自动把object转变为json串的配置 -->
   <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"/>

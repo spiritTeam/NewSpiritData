@@ -42,7 +42,8 @@ CREATE TABLE plat_DictD (
   lmTime       timestamp        NOT NULL  DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP  COMMENT '最后修改时间',
   PRIMARY KEY (id),
   INDEX sortIdx(mId, pId, sort) USING HASH,
-  UNIQUE INDEX bizIdx001(mId, bCode) USING HASH
+  INDEX sortIdx(mId, pId, sort) USING HASH,
+  UNIQUE INDEX bizIdx001(ownerType, ownerId, dmName) USING HASH
 )
 ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='D002字典项';
 

@@ -3,7 +3,6 @@ package com.spiritdata.commons.web;
 import javax.servlet.http.HttpServletRequest;
 
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
@@ -13,8 +12,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-
-import com.spiritdata.framework.util.JsonUtils;
 
 //import com.google.gson.Gson;
 
@@ -40,9 +37,6 @@ public class LogAspectSpring {
 
         // result的值就是被拦截方法的返回值
         Object result = pjp.proceed();
-        //Gson gson = new Gson();
-        //logger.info("请求结束，controller的返回值是 " + gson.toJson(result));
-        logger.info("请求结束，controller的返回值是 " + JsonUtils.objToJson(request));
         return result;
     }
 }

@@ -99,6 +99,7 @@
   <servlet-mapping>
     <servlet-name>springMvc</servlet-name>
     <url-pattern>*.do</url-pattern>
+    <url-pattern>/</url-pattern><!-- 采用Rest风格  -->
   </servlet-mapping>
   <!-- end Servlet设置 -->
 

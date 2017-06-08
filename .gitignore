@@ -4,5 +4,7 @@ target/
 /WebContent/WEB-INF/classes
 /WebContent/WEB-INF/lib
 /logs
+/Doc/~*
+*test*
 
 
