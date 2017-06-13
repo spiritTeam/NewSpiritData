@@ -6,6 +6,8 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.spiritdata.commons.logvisit.LogVisitListener;
 import com.spiritdata.framework.FConstants;
 import com.spiritdata.framework.core.cache.CacheEle;
 import com.spiritdata.framework.core.cache.SystemCache;
@@ -21,7 +23,8 @@ public class AppRunningListener implements ServletContextListener {
         try {
             //加载配置文件
             loadConfig();
-            //启动Socket
+            //启动数据收集数据
+            LogVisitListener.begin();
         } catch(Exception e) {
             logger.error("Web运行时监听启动异常：",e);
         }

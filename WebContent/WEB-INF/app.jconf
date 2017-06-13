@@ -1,2 +1,8 @@
 {
+  //应用标识
+  "serverIdentify":{
+    "serverType":"10000",
+    "serverId":"spiritData",
+    "serverName":"灵派数据"
+  }
 }

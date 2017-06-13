@@ -22,27 +22,22 @@ public class Owner extends BaseObject {
 
     private int ownerType;
     private String ownerId;
+    private String ownerName;
 
     public Owner() {
         super();
     }
 
+    public Owner(int ownerType, String ownerId, String ownerName) {
+        super();
+        this.ownerType=ownerType;
+        this.ownerId=ownerId;
+        this.ownerName=ownerName;
+    }
+
     public int getOwnerType() {
         return ownerType;
     }
-
-    public Owner(int ownerType, String ownerId) {
-        super();
-        this.ownerType=ownerType;
-        this.ownerId=ownerId;
-    }
-
-    public Owner(String ownerId, int ownerType) {
-        super();
-        this.ownerType=ownerType;
-        this.ownerId=ownerId;
-    }
-    
     public void setOwnerType(int ownerType) {
         this.ownerType=ownerType;
     }
@@ -51,6 +46,12 @@ public class Owner extends BaseObject {
     }
     public void setOwnerId(String ownerId) {
         this.ownerId=ownerId;
+    }
+    public String getOwnerName() {
+        return ownerName;
+    }
+    public void setOwnerName(String ownerName) {
+        this.ownerName=ownerName;
     }
 
     @Override
@@ -71,7 +72,7 @@ public class Owner extends BaseObject {
      * @return
      */
     public String getKey() {
-        return ownerId+"="+ownerType;
+        return ownerId+"::"+ownerType;
     }
 
     @Override
