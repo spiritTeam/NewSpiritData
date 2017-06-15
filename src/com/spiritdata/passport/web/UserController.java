@@ -22,4 +22,21 @@ public class UserController {
         //throw new Exception("");
         return o;
     }
+
+    /**
+     * 用户注册
+     * @param request
+     * @return
+     */
+    @RequestMapping(value="login.do")
+    @ResponseBody
+    public Map<String,Object> login(HttpServletRequest request) {
+        Map<String, Object> o=new HashMap<String, Object>();
+        System.out.println("切片测试=================");
+        o.put("AopTest", "切片测试");
+        System.out.println("处理中::"+request.getAttribute("testBeforeDoing"));
+        //throw new Exception("");
+        return o;
+    }
+    
 }

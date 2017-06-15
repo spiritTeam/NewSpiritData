@@ -8,11 +8,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.spiritdata.commons.logvisit.LogVisitListener;
+import com.spiritdata.commons.model.Owner;
 import com.spiritdata.framework.FConstants;
 import com.spiritdata.framework.core.cache.CacheEle;
 import com.spiritdata.framework.core.cache.SystemCache;
 import com.spiritdata.framework.jsonconf.JsonConfig;
 import com.spiritdata.framework.util.StringUtils;
+import com.spiritdata.prgconf.ConfigGroupConstants;
+import com.spiritdata.prgconf.ConfigLoadUtils;
 
 public class AppRunningListener implements ServletContextListener {
     private Logger logger=LoggerFactory.getLogger(this.getClass());
@@ -54,6 +57,8 @@ public class AppRunningListener implements ServletContextListener {
             e.printStackTrace();
         }
         if (jc!=null) {
+            Owner servSys=ConfigLoadUtils.getServerConfig(jc);
+            if (servSys!=null) SystemCache.setCache(new CacheEle<Owner>(ConfigGroupConstants.GLOBAL_CONF, "全局配置信息", servSys));
         }
     }
 }

@@ -33,9 +33,8 @@ public class LogVisitService {
      * 保存访问日志信息到数据库
      * @param vlp 访问日志信息
      */
-    public void Save2DB(LogVisitPo alp) {
-        if (StringUtils.isNullOrEmptyOrSpace(alp.getId())) alp.setId(SequenceUUID.getPureUUID());
-        alp.setReturnData(null);
-        logDao.insert(alp);
+    public void Save2DB(LogVisitPo lvPo) {
+        if (StringUtils.isNullOrEmptyOrSpace(lvPo.getId())) lvPo.setId(SequenceUUID.getPureUUID());
+        logDao.insert(lvPo);
     }
 }

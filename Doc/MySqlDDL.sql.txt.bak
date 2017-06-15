@@ -132,7 +132,7 @@ CREATE TABLE log_Visit (
   exploreVer    varchar(100)                                          COMMENT '浏览器版本',
   OSName        varchar(100)                                          COMMENT '操作系统名称',
   OSVer         varchar(100)                                          COMMENT '操作系统版本',
-  apiName       varchar(200)                                          COMMENT '访问名称'
+  apiName       varchar(200)                                          COMMENT '访问名称',
   fromUrl       varchar(500)                                          COMMENT '导入的URL',
   reqUrl        varchar(500)                                          COMMENT '请求的URL',
   method        varchar(20)                                           COMMENT '请求方式是POST/GET/DEL等',

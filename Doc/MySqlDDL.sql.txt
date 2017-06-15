@@ -114,8 +114,8 @@ ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='U004用户登录情况';
 DROP TABLE IF EXISTS log_Visit;
 CREATE TABLE log_Visit (
   id            varchar(32)                                           COMMENT '表ID(UUID)',
-  servType      int(1) unsigned  NOT NULL                             COMMENT '服务系统类型：1=页面访问html；2=数据访问',
   servSysType   varchar(5)       NOT NULL                             COMMENT '服务系统表示：是本系统',
+  servSysId     varchar(32)      NOT NULL                             COMMENT '服务系统类型：1=页面访问html；2=数据访问',
   visitType     int(1) unsigned  NOT NULL                             COMMENT '访问类型：1=页面访问html；2=数据访问',
   visitSysType  varchar(5)       NOT NULL                             COMMENT '访问系统：系统类型，是本系统',
   visitSysId    varchar(32)      NOT NULL                             COMMENT '访问系统：系统标识，是本系统',
