@@ -2,7 +2,7 @@ package com.spiritdata.commons.logvisit.mem;
 
 import java.util.concurrent.LinkedBlockingQueue;
 
-import com.spiritdata.commons.logvisit.persis.pojo.LogVisitPo;
+import com.spiritdata.commons.logvisit.persis.po.LogVisitPo;
 
 import java.sql.Timestamp;
 import java.util.concurrent.BlockingQueue;

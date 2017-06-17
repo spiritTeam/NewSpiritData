@@ -1,11 +1,16 @@
 package com.spiritdata.commons.logvisit;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.spiritdata.commons.logvisit.mem.LogVisitMemory;
-import com.spiritdata.commons.logvisit.persis.pojo.LogVisitPo;
+import com.spiritdata.commons.logvisit.persis.po.LogVisitPo;
 import com.spiritdata.commons.logvisit.service.LogVisitService;
 import com.spiritdata.framework.ext.spring.SpringGetBean;
 
 public class LogVisitListener extends Thread {
+    private Logger logger=LoggerFactory.getLogger(this.getClass());
+
     private LogVisitService lvService;
 
     /**
@@ -22,19 +27,17 @@ public class LogVisitListener extends Thread {
      */
     @Override
     public void run() {
-        try {
-            LogVisitMemory agm = LogVisitMemory.getInstance();
-
-            int i=0;
-            while (this.lvService==null&&i++<5) {
-                try {
-                    this.lvService=SpringGetBean.getBean("logVisitService");
-                    sleep(500);
-                } catch(Exception e) { }
-            }
-            if (this.lvService!=null) startSave2DB(agm);
-        } catch(Exception e) {
-            e.printStackTrace();
+        LogVisitMemory agm = LogVisitMemory.getInstance();
+        int i=0;
+        while (this.lvService==null&&i++<5) {
+            try {
+                this.lvService=SpringGetBean.getBean("logVisitService");
+            } catch(Exception e) { }
+            try { sleep(500); } catch(Exception e) { }
+        }
+        if (this.lvService!=null) {
+            logger.info("获得访问日志服务成功");
+            startSave2DB(agm);
         }
     }
     /*

@@ -4,74 +4,105 @@
   访问日志
 -->
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="ApiLog">
+<mapper namespace="LOGVISIT">
   <!-- 对象定义:任务组信息 -->
-  <resultMap id="BaseResultMap" type="ApiLog">
-    <id     column="id"           property="id"           jdbcType="VARCHAR"/>
-    <result column="reqUrl"       property="reqUrl"       jdbcType="VARCHAR"/>
-    <result column="method"       property="method"       jdbcType="VARCHAR"/>
-    <result column="reqParam"     property="reqParam"     jdbcType="VARCHAR"/>
-    <result column="apiName"      property="apiName"      jdbcType="VARCHAR"/>
-    <result column="ownerType"    property="ownerType"    jdbcType="INTEGER"/>
-    <result column="ownerId"      property="ownerId"      jdbcType="VARCHAR"/>
-    <result column="deviceType"   property="deviceType"   jdbcType="INTEGER"/>
-    <result column="deviceId"     property="deviceId"     jdbcType="VARCHAR"/>
-    <result column="deviceClass"  property="deviceClass"  jdbcType="VARCHAR"/>
-    <result column="exploreName"  property="exploreName"  jdbcType="VARCHAR"/>
-    <result column="exploreVer"   property="exploreVer"   jdbcType="VARCHAR"/>
-    <result column="objType"      property="objType"      jdbcType="VARCHAR"/>
-    <result column="objId"        property="objId"        jdbcType="VARCHAR"/>
-    <result column="dealFlag"     property="dealFlag"     jdbcType="INTEGER"/>
-    <result column="returnData"   property="returnData"   jdbcType="VARCHAR"/>
-    <result column="beginTime"    property="beginTime"    jdbcType="TIMESTAMP"/>
-    <result column="endTime"      property="endTime"      jdbcType="TIMESTAMP"/>
+  <resultMap id="BaseResultMap" type="LogVisit">
+    <id     column="id"            property="id"            jdbcType="VARCHAR"/>
+    <result column="servSysType"   property="servSysType"   jdbcType="VARCHAR"/>
+    <result column="servSysId"     property="servSysId"     jdbcType="VARCHAR"/>
+
+    <result column="visitType"     property="visitType"     jdbcType="INTEGER"/>
+
+    <result column="visitSysType"  property="visitSysType"  jdbcType="VARCHAR"/>
+    <result column="visitSysId"    property="visitSysId"    jdbcType="VARCHAR"/>
+    <result column="visitModelId"  property="visitModelId"  jdbcType="VARCHAR"/>
+
+    <result column="visitorType"   property="visitSysType"  jdbcType="VARCHAR"/>
+    <result column="visitorId"     property="visitorId"     jdbcType="VARCHAR"/>
+
+    <result column="deviceType"    property="deviceType"    jdbcType="INTEGER"/>
+    <result column="deviceId"      property="deviceId"      jdbcType="VARCHAR"/>
+    <result column="deviceClass"   property="deviceClass"   jdbcType="VARCHAR"/>
+
+    <result column="clientIp"      property="clientIp"      jdbcType="VARCHAR"/>
+    <result column="pointInfo"     property="pointInfo"     jdbcType="VARCHAR"/>
+    <result column="sreenSzie"     property="sreenSzie"     jdbcType="VARCHAR"/>
+    <result column="exploreName"   property="exploreName"   jdbcType="VARCHAR"/>
+    <result column="exploreVer"    property="exploreVer"    jdbcType="VARCHAR"/>
+    <result column="OSName"        property="OSName"        jdbcType="VARCHAR"/>
+    <result column="OSVer"         property="OSVer"         jdbcType="VARCHAR"/>
+
+    <result column="apiName"       property="apiName"       jdbcType="VARCHAR"/>
+    <result column="fromUrl"       property="fromUrl"       jdbcType="VARCHAR"/>
+    <result column="reqUrl"        property="reqUrl"        jdbcType="VARCHAR"/>
+    <result column="method"        property="method"        jdbcType="VARCHAR"/>
+    <result column="reqParam"      property="reqParam"      jdbcType="VARCHAR"/>
+
+    <result column="objType"       property="objType"       jdbcType="VARCHAR"/>
+    <result column="objId"         property="objId"         jdbcType="VARCHAR"/>
+
+    <result column="dealFlag"      property="dealFlag"      jdbcType="INTEGER"/>
+    <result column="beginTime"     property="beginTime"     jdbcType="TIMESTAMP"/>
+    <result column="endTime"       property="endTime"       jdbcType="TIMESTAMP"/>
   </resultMap>
 
   <!-- 所有列 -->
   <sql id="Base_Column_List">
-    id, reqUrl, method, reqParam, apiName, ownerType, ownerId, deviceType, deviceId, deviceClass, exploreName, exploreVer, objType, objId, dealFlag, returnData, beginTime, endTime
+    id, servSysType, servSysId, visitType, visitSysType, visitSysId, visitModelId, visitorType, visitorId, clientIp, pointInfo, deviceType, deviceId, deviceClass, sreenSzie, exploreName, exploreVer, OSName, OSVer, apiName, fromUrl, reqUrl, method, reqParam, objType, objId, dealFlag, beginTime, endTime
   </sql>
 
   <!-- 新增数据 -->
   <insert id="insert" parameterType="java.util.Map">
-    insert into ld_API
+    insert into log_Visit
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id!=null">id,</if>
-      <if test="reqUrl!=null">reqUrl,</if>
-      <if test="method!=null">method,</if>
-      <if test="reqParam!=null">reqParam,</if>
-      <if test="apiName!=null">apiName,</if>
-      <if test="ownerType!=null and ownerType!=0">ownerType,</if>
-      <if test="ownerId!=null">ownerId,</if>
-      <if test="deviceType!=null">deviceType,</if>
+      <if test="servSysType!=null">servSysType,</if>
+      <if test="servSysId!=null">servSysId,</if>
+      <if test="visitType!=null and visitType!=0">visitType,</if>
+      <if test="visitSysType!=null">visitSysType,</if>
+      <if test="visitSysId!=null">visitSysId,</if>
+      <if test="visitModelId!=null">visitModelId,</if>
+      <if test="visitorType!=null">visitorType,</if>
+      <if test="visitorId!=null">visitorId,</if>
+      <if test="deviceType!=null and deviceType!=0">deviceType,</if>
       <if test="deviceId!=null">deviceId,</if>
       <if test="deviceClass!=null">deviceClass,</if>
+      <if test="clientIp!=null">clientId,</if>
+      <if test="pointInfo!=null">pointInfo,</if>
+      <if test="screenSize!=null">screenSize,</if>
       <if test="exploreName!=null">exploreName,</if>
       <if test="exploreVer!=null">exploreVer,</if>
+      <if test="ossName!=null">OSName,</if>
+      <if test="osVer!=null">OSVer,</if>
       <if test="objType!=null">objType,</if>
       <if test="objId!=null">objId,</if>
       <if test="dealFlag!=null">dealFlag,</if>
-      <if test="returnData!=null">returnData,</if>
       <if test="beginTime!=null">beginTime,</if>
       <if test="endTime!=null">endTime,</if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id!=null">#{id,jdbcType=VARCHAR},</if>
-      <if test="reqUrl!=null">#{reqUrl,jdbcType=VARCHAR},</if>
-      <if test="method!=null">#{method,jdbcType=VARCHAR},</if>
-      <if test="reqParam!=null">#{reqParam,jdbcType=VARCHAR},</if>
-      <if test="apiName!=null">#{apiName,jdbcType=VARCHAR},</if>
-      <if test="ownerType!=null and ownerType!=0">#{ownerType,jdbcType=INTEGER},</if>
-      <if test="ownerId!=null">#{ownerId,jdbcType=VARCHAR},</if>
-      <if test="deviceType!=null">#{deviceType,jdbcType=INTEGER},</if>
+      <if test="servSysType!=null">#{servSysType,jdbcType=VARCHAR},</if>
+      <if test="servSysId!=null">#{servSysId,jdbcType=VARCHAR},</if>
+      <if test="visitType!=null and visitType!=0">#{visitType,jdbcType=INTEGER},</if>
+      <if test="visitSysType!=null">#{visitSysType,jdbcType=VARCHAR},</if>
+      <if test="visitSysId!=null">#{visitSysId,jdbcType=VARCHAR},</if>
+      <if test="visitModelId!=null">#{visitModelId,jdbcType=VARCHAR},</if>
+      <if test="visitorType!=null">#{visitorType,jdbcType=VARCHAR},</if>
+      <if test="visitorId!=null">#{visitorId,jdbcType=VARCHAR},</if>
+      <if test="deviceType!=null and deviceType!=0">#{deviceType,jdbcType=INTEGER},</if>
       <if test="deviceId!=null">#{deviceId,jdbcType=VARCHAR},</if>
       <if test="deviceClass!=null">#{deviceClass,jdbcType=VARCHAR},</if>
+      <if test="clientIp!=null">#{clientIp,jdbcType=VARCHAR},</if>
+      <if test="pointInfo!=null">#{pointInfo,jdbcType=VARCHAR},</if>
+      <if test="screenSize!=null">#{screenSize,jdbcType=VARCHAR},</if>
       <if test="exploreName!=null">#{exploreName,jdbcType=VARCHAR},</if>
       <if test="exploreVer!=null">#{exploreVer,jdbcType=VARCHAR},</if>
+      <if test="osName!=null">#{osName,jdbcType=VARCHAR},</if>
+      <if test="osVer!=null">#{osVer,jdbcType=VARCHAR},</if>
       <if test="objType!=null">#{objType,jdbcType=VARCHAR},</if>
       <if test="objId!=null">#{objId,jdbcType=VARCHAR},</if>
       <if test="dealFlag!=null">#{dealFlag,jdbcType=INTEGER},</if>
-      <if test="returnData!=null">#{returnData,jdbcType=VARCHAR},</if>
       <if test="beginTime!=null">#{beginTime,jdbcType=TIMESTAMP},</if>
       <if test="endTime!=null">#{endTime,jdbcType=TIMESTAMP},</if>
     </trim>

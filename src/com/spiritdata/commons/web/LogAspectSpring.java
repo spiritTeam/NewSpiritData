@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
-import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
@@ -24,10 +24,11 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import com.spiritdata.anotation.NeedLogin;
 import com.spiritdata.commons.logvisit.LogVisitUtils;
 import com.spiritdata.commons.logvisit.mem.LogVisitMemory;
-import com.spiritdata.commons.logvisit.persis.pojo.LogVisitPo;
+import com.spiritdata.commons.logvisit.persis.po.LogVisitPo;
 import com.spiritdata.commons.model.Owner;
 import com.spiritdata.framework.util.JsonUtils;
 import com.spiritdata.framework.util.RequestUtils;
+import com.spiritdata.framework.util.StringUtils;
 
 /**
  * 所有网络业务请求的切面。
@@ -43,22 +44,14 @@ public class LogAspectSpring {
     @Pointcut("execution(public * com.spiritdata.**.web.*Controller.*(..))")  
     private void controllerLog(){}//定义一个切入点，所有控制类的
 
-    /**
-     * 在正常调用方法后。完成
-     */
-    @After("controllerLog()") 
-    public void afterDoing() {
-        RequestAttributes ra=RequestContextHolder.getRequestAttributes();
-        ServletRequestAttributes sra=(ServletRequestAttributes) ra;
-        HttpServletRequest request=sra.getRequest();
-        //存储日志
-        LogVisitPo lvOp=(LogVisitPo)request.getAttribute("lvObj");
-        if (lvOp!=null) {
-            lvOp.setEndTime(new Timestamp(System.currentTimeMillis()));
-            try {LogVisitMemory.getInstance().put2Queue(lvOp);} catch(Exception e) {};
-        }
+    @AfterThrowing("controllerLog()")
+    public void doAfterThrow() {
+        System.out.println("例外通知");
     }
-
+    /**
+     * 环绕在实际方法前后的方法
+     */
+    @SuppressWarnings("rawtypes")
     @Around("controllerLog()")
     public Object doAround(ProceedingJoinPoint pjp) throws Throwable {
         //0-获得Request
@@ -70,37 +63,61 @@ public class LogAspectSpring {
         request.setAttribute("mergedParam", m);
         //2-准备日志数据
         LogVisitPo lvOp=LogVisitUtils.buildApiLogDataFromRequest(request);
-        if (m!=null) lvOp.setReqParam(JsonUtils.objToJson(m));
         lvOp.setVisitType(2);//在这里拦截的都是业务请求，即都是数据请求，要统一设置为2
         lvOp.setServSysType(_config_SI.getOwnerType());
         lvOp.setServSysId(_config_SI.getOwnerId());
-        request.setAttribute("lvObj", lvOp);
-        //3.1-判断是否需要登录
-        boolean needLogin=false;
-        Signature signature=pjp.getSignature();
-        MethodSignature methodSignature=(MethodSignature)signature;
-        Method targetMethod=methodSignature.getMethod();
-        Annotation[] aArray=targetMethod.getAnnotations();
-        if (aArray!=null&&aArray.length>0) {
-            int i=0;
-            for (; i<aArray.length; i++) if (aArray[i] instanceof NeedLogin) break;
-            needLogin=i<aArray.length;
-        }
-        //3.2-登录处理
-        boolean logined=true;
-        if (needLogin) {
-            //判断是否登录了
-            
-        }
+        lvOp.setDealFlag(0);
+
         Object result=null;
-        if (logined) {//成功登录
-            result=pjp.proceed();
-        } else {//不成功登录
+        try {
+            if (m!=null) lvOp.setReqParam(JsonUtils.objToJson(m));
+            //3.1-判断是否需要登录
+            boolean needLogin=false;
+            Signature signature=pjp.getSignature();
+            MethodSignature methodSignature=(MethodSignature)signature;
+            Method targetMethod=methodSignature.getMethod();
+            Annotation[] aArray=targetMethod.getAnnotations();
+            if (aArray!=null&&aArray.length>0) {
+                int i=0;
+                for (; i<aArray.length; i++) if (aArray[i] instanceof NeedLogin) break;
+                needLogin=i<aArray.length;
+            }
+            //3.2-登录处理
+            boolean logined=true;
+            if (needLogin) {
+                //判断是否登录了
+                logined=false;
+            }
+            if (logined) {//成功登录
+                /**
+                 * 调用实际的方法
+                 */
+                result=pjp.proceed();
+            } else {//不成功登录
+                Map<String, Object> rm=new HashMap<String, Object>();
+                rm.put("ReturnType", "0000");
+                rm.put("Message", "需要登录");
+                result=rm;
+            }
+            
+            lvOp.setDealFlag(2);//处理失败
+            if ((result instanceof Map)&&((((Map)result).get("ReturnType")+"").equals("1001"))) {
+                lvOp.setDealFlag(1);//处理成功
+            }
+        } catch(Exception e) {
             Map<String, Object> rm=new HashMap<String, Object>();
-            rm.put("ReturnType", "0000");
-            rm.put("Message", "需要登录");
+            rm.put("ReturnType", "T");
+            rm.put("TClass", e.getClass().getName());
+            rm.put("Message", StringUtils.getAllMessage(e));
+            lvOp.setDealFlag(2);//处理异常
+            result=rm;
+        } finally {
+            //记录日志，收集数据
+            lvOp.setEndTime(new Timestamp(System.currentTimeMillis()));
+            try {
+                LogVisitMemory.getInstance().put2Queue(lvOp);
+            } catch (InterruptedException e) {}
         }
-        
         return result;
     }
 }

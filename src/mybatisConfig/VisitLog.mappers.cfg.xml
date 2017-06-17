@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<!-- 日志相关设置 -->
+<configuration>
+  <!-- 别名设置 -->
+  <typeAliases>
+    <!-- 访问日志 -->
+    <typeAlias alias="LogVisit" type="com.spiritdata.commons.logvisit.persis.po.LogVisitPo"/>
+  </typeAliases>
+
+  <!-- SQL配置 -->
+  <mappers>
+    <!-- 访问日志 -->
+    <mapper resource="com/spiritdata/commons/logvisit/persis/sql/LogVisit.mapper.xml"/>
+  </mappers>
+</configuration>

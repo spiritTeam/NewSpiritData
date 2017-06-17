@@ -1,4 +1,4 @@
-package com.spiritdata.commons.logvisit.persis.pojo;
+package com.spiritdata.commons.logvisit.persis.po;
 
 import java.sql.Timestamp;
 
@@ -41,7 +41,7 @@ public class LogVisitPo extends BaseObject {
     private String reqParam; //请求中的参数，形式为JSON
     private String objType; //主对象类型，是数据库模型中主对象的编号
     private String objId; //访问实体的ID
-    private String dealFlag; //处理过程0正在处理1处理成功2处理失败
+    private int dealFlag; //处理过程0正在处理1处理成功2处理失败
     private Timestamp beginTime; //开始处理时间，或操作点操作时间
     private Timestamp endTime; //结束处理时间
 
@@ -201,10 +201,10 @@ public class LogVisitPo extends BaseObject {
     public void setObjId(String objId) {
         this.objId=objId;
     }
-    public String getDealFlag() {
+    public int getDealFlag() {
         return dealFlag;
     }
-    public void setDealFlag(String dealFlag) {
+    public void setDealFlag(int dealFlag) {
         this.dealFlag=dealFlag;
     }
     public Timestamp getBeginTime() {

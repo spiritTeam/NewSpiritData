@@ -5,7 +5,7 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
-import com.spiritdata.commons.logvisit.persis.pojo.LogVisitPo;
+import com.spiritdata.commons.logvisit.persis.po.LogVisitPo;
 import com.spiritdata.framework.core.dao.mybatis.MybatisDAO;
 import com.spiritdata.framework.util.SequenceUUID;
 import com.spiritdata.framework.util.StringUtils;

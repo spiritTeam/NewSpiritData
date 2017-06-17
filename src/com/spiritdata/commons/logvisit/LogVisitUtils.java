@@ -3,7 +3,7 @@ package com.spiritdata.commons.logvisit;
 import java.sql.Timestamp;
 import javax.servlet.http.HttpServletRequest;
 
-import com.spiritdata.commons.logvisit.persis.pojo.LogVisitPo;
+import com.spiritdata.commons.logvisit.persis.po.LogVisitPo;
 import com.spiritdata.framework.util.SequenceUUID;
 import com.spiritdata.framework.util.StringUtils;
 
