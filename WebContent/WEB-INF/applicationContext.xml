@@ -8,21 +8,27 @@
                         http://www.springframework.org/schema/context
                         http://www.springframework.org/schema/context/spring-context-3.0.xsd"
 >
-  <!--读取数据库配置信息 -->
+  <!-- 读取数据库配置信息 -->
   <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
     <property name="locations">
       <list merge="default">
-        <value>/WEB-INF/database.properties</value>
+        <value>/WEB-INF/config.properties</value>
       </list>
     </property>
+  </bean>
+  <!-- 以下配置类加载 -->
+  <bean id="serverIdentify" class="com.spiritdata.commons.model.Owner" scope="singleton">
+    <property name="ownerType" value="${_SI.serverType}"/>
+    <property name="ownerId" value="${_SI.serverId}"/>
+    <property name="ownerName" value="${_SI.serverName}"/>
   </bean>
 
   <!-- 正式库 -->
   <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close" lazy-init="false">
-    <property name="driverClassName" value="${jdbc.mysql.driverClassName}"/>
-    <property name="url" value="${mainDB.jdbc.mysql.url}"/>
-    <property name="username" value="${mainDB.jdbc.mysql.username}"/>
-    <property name="password" value="${mainDB.jdbc.mysql.password}"/>
+    <property name="driverClassName" value="${_DB.jdbc.mysql.driverClassName}"/>
+    <property name="url" value="${_DB.mainDB.jdbc.mysql.url}"/>
+    <property name="username" value="${_DB.mainDB.jdbc.mysql.username}"/>
+    <property name="password" value="${_DB.mainDB.jdbc.mysql.password}"/>
     <property name="initialSize" value="30"/>
     <property name="maxActive" value="50"/>
     <property name="maxWait" value="60000"/>

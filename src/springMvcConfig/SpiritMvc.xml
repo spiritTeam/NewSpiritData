@@ -50,10 +50,4 @@
   <!-- 以下为AOP配置 -->
   <aop:aspectj-autoproxy proxy-target-class="true"/>
   <bean id="logHandler" class="com.spiritdata.commons.web.LogAspectSpring" />
-  <!--<aop:config proxy-target-class="true">
-     <aop:aspect id="log" ref="logHandler">
-       <aop:pointcut id="logApi" expression="execution(* com.spiritdata.passport.web.TestController.*(..))" />
-       <aop:before method="doServiceLog" pointcut-ref="logApi" />
-     </aop:aspect>
-  </aop:config>-->
 </beans>

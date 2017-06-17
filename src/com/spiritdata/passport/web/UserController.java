@@ -9,8 +9,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.spiritdata.anotation.NeedLogin;
+
 @Controller
-@RequestMapping(value="/passport/")
+@RequestMapping(value="/passport/user/")
 public class UserController {
     @RequestMapping(value="aopLog.do")
     @ResponseBody
@@ -30,6 +32,7 @@ public class UserController {
      */
     @RequestMapping(value="login.do")
     @ResponseBody
+    @NeedLogin
     public Map<String,Object> login(HttpServletRequest request) {
         Map<String, Object> o=new HashMap<String, Object>();
         System.out.println("切片测试=================");

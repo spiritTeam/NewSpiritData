@@ -1,9 +1,12 @@
 package com.spiritdata.commons.web;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.Map;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -18,14 +21,13 @@ import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import com.spiritdata.anotation.NeedLogin;
 import com.spiritdata.commons.logvisit.LogVisitUtils;
 import com.spiritdata.commons.logvisit.mem.LogVisitMemory;
 import com.spiritdata.commons.logvisit.persis.pojo.LogVisitPo;
 import com.spiritdata.commons.model.Owner;
-import com.spiritdata.framework.core.cache.SystemCache;
 import com.spiritdata.framework.util.JsonUtils;
 import com.spiritdata.framework.util.RequestUtils;
-import com.spiritdata.prgconf.ConfigGroupConstants;
 
 /**
  * 所有网络业务请求的切面。
@@ -35,6 +37,9 @@ import com.spiritdata.prgconf.ConfigGroupConstants;
 @Aspect
 @Component
 public class LogAspectSpring {
+    @Resource(name="serverIdentify")
+    private Owner _config_SI;
+    
     @Pointcut("execution(public * com.spiritdata.**.web.*Controller.*(..))")  
     private void controllerLog(){}//定义一个切入点，所有控制类的
 
@@ -67,17 +72,35 @@ public class LogAspectSpring {
         LogVisitPo lvOp=LogVisitUtils.buildApiLogDataFromRequest(request);
         if (m!=null) lvOp.setReqParam(JsonUtils.objToJson(m));
         lvOp.setVisitType(2);//在这里拦截的都是业务请求，即都是数据请求，要统一设置为2
-        Owner servSys=(Owner)SystemCache.getCache(ConfigGroupConstants.GLOBAL_CONF).getContent();
-        lvOp.setServSysType(servSys.getOwnerType());
-        lvOp.setServSysId(servSys.getOwnerId());
+        lvOp.setServSysType(_config_SI.getOwnerType());
+        lvOp.setServSysId(_config_SI.getOwnerId());
         request.setAttribute("lvObj", lvOp);
-
+        //3.1-判断是否需要登录
+        boolean needLogin=false;
         Signature signature=pjp.getSignature();
         MethodSignature methodSignature=(MethodSignature)signature;
         Method targetMethod=methodSignature.getMethod();
+        Annotation[] aArray=targetMethod.getAnnotations();
+        if (aArray!=null&&aArray.length>0) {
+            int i=0;
+            for (; i<aArray.length; i++) if (aArray[i] instanceof NeedLogin) break;
+            needLogin=i<aArray.length;
+        }
+        //3.2-登录处理
+        boolean logined=true;
+        if (needLogin) {
+            //判断是否登录了
             
-        Class clazz=targetMethod.getClass();
-        Object result=pjp.proceed();
+        }
+        Object result=null;
+        if (logined) {//成功登录
+            result=pjp.proceed();
+        } else {//不成功登录
+            Map<String, Object> rm=new HashMap<String, Object>();
+            rm.put("ReturnType", "0000");
+            rm.put("Message", "需要登录");
+        }
+        
         return result;
     }
 }
