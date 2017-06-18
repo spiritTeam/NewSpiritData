@@ -106,11 +106,14 @@ public class LogAspectSpring {
             if (needLogin) {
                 //判断是否登录了
                 logined=false;
+            } else {
+                
             }
             if (logined) {//成功登录或根本不需要处理是否登录
                 /**
                  * 调用实际的方法
                  */
+                request.setAttribute("logData", lvOp);
                 result=pjp.proceed();
             } else {//不成功登录
                 Map<String, Object> rm=new HashMap<String, Object>();
