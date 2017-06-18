@@ -26,7 +26,7 @@ public class LogVisitService {
 
     @PostConstruct
     public void initParam() {
-        logDao.setNamespace("ApiLog");
+        logDao.setNamespace("LOGVISIT");
     }
 
     /**

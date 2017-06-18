@@ -13,23 +13,23 @@ public class LogVisitPo extends BaseObject {
 
     private String id; //日志id
     //以下两项是一类Owner——服务系统
-    private int servSysType; //服务系统类型——处理请求的服务 
+    private String servSysType; //服务系统类型——处理请求的服务 
     private String servSysId; //服务系统标识——处理请求的服务
 
     private int visitType; //访问类型：1=页面访问html；2=数据访问
     //以下两项是一类Owner——访问系统
-    private int visitSysType; //访问系统类型——调用服务或访问服务的系统
+    private String visitSysType; //访问系统类型——调用服务或访问服务的系统
     private String visitSysId; //访问系统标识——调用服务或访问服务的系统
-    private String visitModelId; //访问系统模块——访问系统中那个模块调用的服务
+    private String visitModuleId; //访问系统模块——访问系统中那个模块调用的服务
     //以下两项是一类Owner——访问用户
-    private int visitorType; //用户类型
+    private String visitorType; //用户类型
     private String visitorId; //用户Id
     private String clientIp; //客户端Ip，可接受IPv6
     private String pointInfo; //可能是GPS坐标，以json格式记录
+    private String screenSize; //屏幕大小:json
     private int deviceType; //1=手机2=设备3=PC
     private String deviceId; //设备编号：IMEI或PC标识（mac地址或CPU号）
     private String deviceClass; //设备型号：手机型号+品牌，如：HUAWEI, hc-10
-    private String sreenSzie; //屏幕大小:json
     private String exploreName; //浏览器名称
     private String exploreVer; //浏览器版本
     private String osName; //操作系统名称
@@ -51,10 +51,10 @@ public class LogVisitPo extends BaseObject {
     public void setId(String id) {
         this.id=id;
     }
-    public int getServSysType() {
+    public String getServSysType() {
         return servSysType;
     }
-    public void setServSysType(int servSysType) {
+    public void setServSysType(String servSysType) {
         this.servSysType=servSysType;
     }
     public String getServSysId() {
@@ -69,10 +69,10 @@ public class LogVisitPo extends BaseObject {
     public void setVisitType(int visitType) {
         this.visitType=visitType;
     }
-    public int getVisitSysType() {
+    public String getVisitSysType() {
         return visitSysType;
     }
-    public void setVisitSysType(int visitSysType) {
+    public void setVisitSysType(String visitSysType) {
         this.visitSysType=visitSysType;
     }
     public String getVisitSysId() {
@@ -81,16 +81,16 @@ public class LogVisitPo extends BaseObject {
     public void setVisitSysId(String visitSysId) {
         this.visitSysId=visitSysId;
     }
-    public String getVisitModelId() {
-        return visitModelId;
+    public String getVisitModuleId() {
+        return visitModuleId;
     }
-    public void setVisitModelId(String visitModelId) {
-        this.visitModelId=visitModelId;
+    public void setVisitModuleId(String visitModuleId) {
+        this.visitModuleId=visitModuleId;
     }
-    public int getVisitorType() {
+    public String getVisitorType() {
         return visitorType;
     }
-    public void setVisitorType(int visitorType) {
+    public void setVisitorType(String visitorType) {
         this.visitorType=visitorType;
     }
     public String getVisitorId() {
@@ -129,11 +129,11 @@ public class LogVisitPo extends BaseObject {
     public void setDeviceClass(String deviceClass) {
         this.deviceClass=deviceClass;
     }
-    public String getSreenSzie() {
-        return sreenSzie;
+    public String getScreenSize() {
+        return screenSize;
     }
-    public void setSreenSzie(String sreenSzie) {
-        this.sreenSzie=sreenSzie;
+    public void setScreenSize(String screenSize) {
+        this.screenSize=screenSize;
     }
     public String getExploreName() {
         return exploreName;

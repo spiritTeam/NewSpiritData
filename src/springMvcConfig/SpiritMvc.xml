@@ -46,6 +46,9 @@
   <context:component-scan base-package="com.spiritdata.passport" use-default-filters="false">
     <context:include-filter type="regex" expression=".*.web.*Controller"/>
   </context:component-scan>
+  <context:component-scan base-package="com.spiritdata.commons" use-default-filters="false">
+    <context:include-filter type="regex" expression=".*.web.*Controller"/>
+  </context:component-scan>
 
   <!-- 以下为AOP配置 -->
   <aop:aspectj-autoproxy proxy-target-class="true"/>

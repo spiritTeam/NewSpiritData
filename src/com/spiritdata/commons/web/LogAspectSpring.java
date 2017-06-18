@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
-import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
@@ -21,6 +20,7 @@ import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import com.spiritdata.anotation.ApiName;
 import com.spiritdata.anotation.NeedLogin;
 import com.spiritdata.commons.logvisit.LogVisitUtils;
 import com.spiritdata.commons.logvisit.mem.LogVisitMemory;
@@ -40,14 +40,10 @@ import com.spiritdata.framework.util.StringUtils;
 public class LogAspectSpring {
     @Resource(name="serverIdentify")
     private Owner _config_SI;
-    
+
     @Pointcut("execution(public * com.spiritdata.**.web.*Controller.*(..))")  
     private void controllerLog(){}//定义一个切入点，所有控制类的
 
-    @AfterThrowing("controllerLog()")
-    public void doAfterThrow() {
-        System.out.println("例外通知");
-    }
     /**
      * 环绕在实际方法前后的方法
      */
@@ -62,16 +58,17 @@ public class LogAspectSpring {
         Map<String, Object> m=RequestUtils.getDataFromRequest(request);
         request.setAttribute("mergedParam", m);
         //2-准备日志数据
-        LogVisitPo lvOp=LogVisitUtils.buildApiLogDataFromRequest(request);
-        lvOp.setVisitType(2);//在这里拦截的都是业务请求，即都是数据请求，要统一设置为2
-        lvOp.setServSysType(_config_SI.getOwnerType());
+        LogVisitPo lvOp=LogVisitUtils.buildLogDataFromRequest(request);
+        lvOp.setServSysType(_config_SI.getOwnerType()+"");
         lvOp.setServSysId(_config_SI.getOwnerId());
+        lvOp.setVisitType(2);//在这里拦截的都是业务请求，即都是数据请求，要统一设置为2
         lvOp.setDealFlag(0);
+        String errStr=LogVisitUtils.fillLogDataFromParam(lvOp, m);
 
         Object result=null;
         try {
             if (m!=null) lvOp.setReqParam(JsonUtils.objToJson(m));
-            //3.1-判断是否需要登录
+            //3.1-处理注解：判断是否需要登录，获取Api名称
             boolean needLogin=false;
             Signature signature=pjp.getSignature();
             MethodSignature methodSignature=(MethodSignature)signature;
@@ -81,14 +78,36 @@ public class LogAspectSpring {
                 int i=0;
                 for (; i<aArray.length; i++) if (aArray[i] instanceof NeedLogin) break;
                 needLogin=i<aArray.length;
+                Annotation a=null;
+                i=0;
+                for (; i<aArray.length; i++) if (aArray[i] instanceof ApiName) break;
+                if (i<aArray.length) a=aArray[i];
+                if (a!=null) {
+                    String apiName=((ApiName)a).value();
+                    if (StringUtils.isNullOrEmptyOrSpace(apiName)) {
+                        if (lvOp.getVisitType()==2) {
+                            if (StringUtils.isNullOrEmptyOrSpace(errStr)) errStr="无法获得Api名称";
+                            else errStr+=","+"无法获得Api名称";
+                        }
+                    } else lvOp.setApiName(apiName);
+                }
             }
-            //3.2-登录处理
+            //3.2-若参数有问题
+            if (!StringUtils.isNullOrEmptyOrSpace(errStr)) {
+                Map<String, Object> rm=new HashMap<String, Object>();
+                rm.put("ReturnType", "2099");
+                rm.put("Message", errStr);
+                lvOp.setDealFlag(2);//处理异常
+                result=rm;
+                return result;
+            }
+            //3.3-登录处理
             boolean logined=true;
             if (needLogin) {
                 //判断是否登录了
                 logined=false;
             }
-            if (logined) {//成功登录
+            if (logined) {//成功登录或根本不需要处理是否登录
                 /**
                  * 调用实际的方法
                  */
@@ -108,7 +127,7 @@ public class LogAspectSpring {
             Map<String, Object> rm=new HashMap<String, Object>();
             rm.put("ReturnType", "T");
             rm.put("TClass", e.getClass().getName());
-            rm.put("Message", StringUtils.getAllMessage(e));
+            rm.put("Message", e.getMessage());
             lvOp.setDealFlag(2);//处理异常
             result=rm;
         } finally {
