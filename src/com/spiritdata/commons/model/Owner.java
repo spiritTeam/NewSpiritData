@@ -54,35 +54,33 @@ public class Owner extends BaseObject {
         this.ownerName=ownerName;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this==obj) return true;
-        if (obj==null) return false;
-        if (getClass() != obj.getClass()) return false;
-
-        Owner other=(Owner)obj;
-        if (ownerId==null&&other.ownerId!=null) return false;
-        else if (!ownerId.equals(other.ownerId)) return false;
-        if (ownerType!=other.ownerType) return false;
-        return true;
-    }
-
     /**
      * 得到所有者的Key
-     * @return
+     * @return 所有者key
      */
     public String getKey() {
         return ownerId+"::"+ownerType;
     }
 
+    /**
+     * 得到标识字符串
+     * @return 标识字符串
+     */
+    @Override
+    public String toString() {
+        return ownerId+"_"+ownerType;
+    }
+
     @Override
     public int hashCode() {
-        int retInt=0;
-        String str=this.ownerId+":"+this.ownerType;
-        for(int i=0;i<str.length();i++){
-            char achar=str.charAt(i);
-            retInt += achar;
-        }
-        return retInt;
+        return this.toString().hashCode();
+    }
+    @Override
+    public boolean equals(Object obj) {
+        if (obj==null) return false;
+        try {
+            return obj.hashCode()==this.hashCode();
+        } catch(Exception e) {}
+        return false;
     }
 }

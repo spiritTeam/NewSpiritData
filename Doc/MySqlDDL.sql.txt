@@ -92,8 +92,8 @@ CREATE TABLE plat_ThirdUser (
 ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='U003第三方用户';
 
 /**U004 用户登录情况[PLAT_USERLOGIN]*/
-DROP TABLE IF EXISTS plat_UsedLogin;
-CREATE TABLE plat_UsedLogin (
+DROP TABLE IF EXISTS plat_UserLogin;
+CREATE TABLE plat_UserLogin (
   id          varchar(32)      NOT NULL                                                         COMMENT 'uuid',
   sysType     varchar(5)       NOT NULL  DEFAULT '10000'                                        COMMENT '系统分类，目前默认为10000',
   sysId       varchar(32)      NOT NULL  DEFAULT '灵派数据'                                     COMMENT '系统标识，目前默认为灵派数据',
@@ -101,7 +101,7 @@ CREATE TABLE plat_UsedLogin (
   deviceType  int(2) unsigned  NOT NULL  DEFAULT 1                                              COMMENT '设备分类：1=手机；2=设备；3=PC，默认1',
   deviceId    varchar(100)     NOT NULL                                                         COMMENT '用户设备号码，若是PC机，则这个值是SessionId(J2EE框架下)',
   status      varchar(1)       NOT NULL                                                         COMMENT '状态：1-登录；2-注销；3-踢出',
-  expire      long             NOT NULL                                                         COMMENT '过期时间，默认为7天，单位是毫秒',
+  expire      int              NOT NULL                                                         COMMENT '过期时间，默认为7天，单位是毫秒',
   lmTime      timestamp        NOT NULL  DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP  COMMENT '最后修改：每次更新的时间',
   PRIMARY KEY(id),
   UNIQUE INDEX bizIdx001(sysType, userId, deviceType, deviceId) USING BTREE,

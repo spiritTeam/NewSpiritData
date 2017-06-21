@@ -2,4 +2,12 @@
 <!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <!-- 用户用户组相关设置 -->
 <configuration>
+  <!-- 别名设置 -->
+  <typeAliases>
+    <typeAlias alias="UserLogin" type="com.spiritdata.passport.login.persis.po.UserLoginPo"/>
+ </typeAliases>
+  <!-- SQL配置 -->
+  <mappers>
+    <mapper resource="com/spiritdata/passport/login/persis/sql/UserLogin.mapper.xml"/>
+  </mappers>
 </configuration>

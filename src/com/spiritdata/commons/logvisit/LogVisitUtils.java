@@ -44,7 +44,7 @@ public abstract class LogVisitUtils {
             //2-消费系统标识
             tempStr=m.get("SysId")==null?null:m.get("SysId")+"";
             if (StringUtils.isNullOrEmptyOrSpace(tempStr)) return "无法获取系统标识";
-            lvOp.setVisitSysType(tempStr);
+            lvOp.setVisitSysId(tempStr);
             //3-消费系统从自己的那个模块访问的此接口
             tempStr=m.get("SysModuleId")==null?null:m.get("SysModuleId")+"";
             if (!StringUtils.isNullOrEmptyOrSpace(tempStr)) lvOp.setVisitModuleId(tempStr);

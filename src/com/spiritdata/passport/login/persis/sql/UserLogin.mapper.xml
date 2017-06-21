@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!-- 手机用户使用 -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="USERLOGIN">
+  <!-- 对象定义:手机用户使用 -->
+  <resultMap id="BaseResultMap" type="UserLogin">
+    <id      column="id"          property="ulId"        jdbcType="VARCHAR"/>
+    <result  column="sysType"     property="sysType"     jdbcType="VARCHAR"/>
+    <result  column="sysId"       property="sysId"       jdbcType="VARCHAR"/>
+    <result  column="userId"      property="userId"      jdbcType="VARCHAR"/>
+    <result  column="deviceType"  property="deviceType"  jdbcType="INTEGER"/>
+    <result  column="deviceId"    property="deviceId"    jdbcType="VARCHAR"/>
+    <result  column="status"      property="status"      jdbcType="INTEGER"/>
+    <result  column="expire"      property="expire"      jdbcType="INTEGER"/>
+    <result  column="lmTime"      property="lmTime"      jdbcType="TIMESTAMP"/>
+  </resultMap>
+
+  <!-- 所有列 -->
+  <sql id="Base_Column_List">
+    id, sysType, sysId, userId, deviceType, deviceId, status, expire, lmTime
+  </sql>
+
+  <!-- 条件子句 -->
+  <sql id="WhereClauseByEntiey">
+    <where>
+      <trim prefix="(" suffix=")" prefixOverrides="and">
+        <if test="id!=null"> and id=#{ulId,jdbcType=VARCHAR}</if>
+        <if test="sysType!=null"> and sysType=#{sysType,jdbcType=VARCHAR}</if>
+        <if test="sysId!=null"> and sysId=#{sysId,jdbcType=VARCHAR}</if>
+        <if test="userId!=null"> and userId=#{userId,jdbcType=VARCHAR}</if>
+        <if test="deviceType!=null and deviceType!=0"> and deviceType=#{deviceType,jdbcType=INTEGER}</if>
+        <if test="deviceId!=null"> and deviceId=#{deviceId,jdbcType=VARCHAR}</if>
+        <if test="status!=null and status!=0"> and status=#{status,jdbcType=INTEGER}</if>
+        <if test="expire!=null and expire!=0"> and expire=#{expire,jdbcType=INTEGER}</if>
+        <if test="lmTime!=null"> and lmTime=#{lmTime,jdbcType=TIMESTAMP}</if>
+      </trim>
+    </where>
+  </sql>
+
+  <!-- 获得记录条数-->
+  <select id="getCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+    select count(*) from plat_UserLogin <if test="_parameter!=null"><include refid="WhereClauseByEntiey"/></if>
+  </select>
+
+  <!-- 获得列表 -->
+  <select id="getList" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select <include refid="Base_Column_List"/> from plat_UserLogin
+    <if test="_parameter!=null"><include refid="WhereClauseByEntiey"/></if>
+    <if test="orderByClause!=null">order by ${orderByClause}</if>
+  </select>
+
+  <!-- 获得一条数据 -->
+  <select id="getInfo" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select <include refid="Base_Column_List"/> from plat_UserLogin <if test="_parameter!=null"><include refid="WhereClauseByEntiey"/></if>
+  </select>
+  <select id="getInfoById" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select <include refid="Base_Column_List"/> from plat_UserLogin where id=#{id,jdbcType=VARCHAR}
+  </select>
+  <select id="getUserUsedInDevice" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select <include refid="Base_Column_List"/> from plat_UserLogin
+    where deviceId=#{deviceId,jdbcType=VARCHAR} and deviceType=#{deviceType,jdbcType=INTEGER}
+      and sysId=#{sysId,jdbcType=VARCHAR} and sysType=#{sysType,jdbcType=VARCHAR} and status=1
+    order by lmTime desc
+    limit 1
+  </select>
+
+  <!-- 新增数据 -->
+  <insert id="insert" parameterType="java.util.Map">
+    insert into plat_UserLogin
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="muId!=null">id,</if>
+      <if test="imei!=null">imei,</if>
+      <if test="PCDType!=null and PCDType!=0">pcdType,</if>
+      <if test="userId!=null">userId,</if>
+      <if test="status!=null and status!=0">status,</if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="muId!=null">#{muId,jdbcType=VARCHAR},</if>
+      <if test="imei!=null">#{imei,jdbcType=VARCHAR},</if>
+      <if test="PCDType!=null and PCDType!=0">#{PCDType,jdbcType=INTEGER},</if>
+      <if test="userId!=null">#{userId,jdbcType=VARCHAR},</if>
+      <if test="status!=null and status!=0">#{status,jdbcType=INTEGER},</if>
+    </trim>
+  </insert>
+
+  <!-- 修改 根据主键-->
+  <update id="update" parameterType="java.util.Map">
+    update plat_UserLogin
+    <set>
+      <if test="sysType!=null">sysType=#{sysType,jdbcType=VARCHAR},</if>
+      <if test="sysId!=null">sysId=#{sysId,jdbcType=VARCHAR},</if>
+      <if test="userId!=null">userId=#{userId,jdbcType=VARCHAR},</if>
+      <if test="deviceType!=null and deviceType!=0">deviceType=#{deviceType,jdbcType=INTEGER},</if>
+      <if test="deviceId!=null">deviceId=#{deviceId,jdbcType=VARCHAR},</if>
+      <if test="status!=null and status!=0">status=#{status,jdbcType=INTEGER},</if>
+    </set>
+    lmTime=CURRENT_TIMESTAMP()
+    where id=#{id,jdbcType=VARCHAR}
+  </update>
+
+  <!-- 修改 根据deviceId-->
+  <update id="updateByDeviceId" parameterType="java.util.Map">
+    update plat_UserLogin set status=#{status,jdbcType=INTEGER}
+    where deviceId=#{deviceId,jdbcType=VARCHAR} and pcdType=#{PCDType,jdbcType=INTEGER} and userId=#{userId,jdbcType=VARCHAR}
+    and sysId=#{sysId,jdbcType=VARCHAR} and sysType=#{sysType,jdbcType=VARCHAR}
+  </update>
+  <!-- 调整用户登录情况，设置为被踢出
+    1-第一个Sql，把在其他设备上的同一系统(App)的本用户的登录设置为被踢出
+    2-第二个Sql，把在相同设备上的同一系统(App)的非本用户登录设置为被踢出
+  -->
+  <update id="adjustByDeviceId" parameterType="java.util.Map">
+    update plat_UserLogin set status=3
+      where deviceId!=#{deviceId,jdbcType=VARCHAR} and deviceType=#{deviceType,jdbcType=INTEGER} and userId=#{userId,jdbcType=VARCHAR} and status=1
+      and sysId=#{sysId,jdbcType=VARCHAR} and sysType=#{sysType,jdbcType=VARCHAR};
+    update plat_UserLogin set status=3
+      where deviceId=#{deviceId,jdbcType=VARCHAR} and deviceType=#{deviceType,jdbcType=INTEGER} and userId!=#{userId,jdbcType=VARCHAR} and status=1
+      and sysId=#{sysId,jdbcType=VARCHAR} and sysType=#{sysType,jdbcType=VARCHAR};
+  </update>
+
+  <!-- 删除数据 -->
+  <delete id="delete" parameterType="java.lang.String">
+    delete from plat_UserLogin where id=#{id,jdbcType=VARCHAR}
+  </delete>
+</mapper>

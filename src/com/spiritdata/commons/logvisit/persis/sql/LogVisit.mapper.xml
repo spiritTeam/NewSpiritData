@@ -74,6 +74,11 @@
       <if test="exploreVer!=null">exploreVer,</if>
       <if test="osName!=null">OSName,</if>
       <if test="osVer!=null">OSVer,</if>
+      <if test="apiName!=null">apiName,</if>
+      <if test="fromUrl!=null">fromUrl,</if>
+      <if test="reqUrl!=null">reqUrl,</if>
+      <if test="method!=null">method,</if>
+      <if test="reqParam!=null">reqParam,</if>
       <if test="objType!=null">objType,</if>
       <if test="objId!=null">objId,</if>
       <if test="dealFlag!=null">dealFlag,</if>
@@ -100,6 +105,11 @@
       <if test="exploreVer!=null">#{exploreVer,jdbcType=VARCHAR},</if>
       <if test="osName!=null">#{osName,jdbcType=VARCHAR},</if>
       <if test="osVer!=null">#{osVer,jdbcType=VARCHAR},</if>
+      <if test="apiName!=null">#{apiName,jdbcType=VARCHAR},</if>
+      <if test="fromUrl!=null">#{fromUrl,jdbcType=VARCHAR},</if>
+      <if test="reqUrl!=null">#{reqUrl,jdbcType=VARCHAR},</if>
+      <if test="method!=null">#{method,jdbcType=VARCHAR},</if>
+      <if test="reqParam!=null">#{reqParam,jdbcType=VARCHAR},</if>
       <if test="objType!=null">#{objType,jdbcType=VARCHAR},</if>
       <if test="objId!=null">#{objId,jdbcType=VARCHAR},</if>
       <if test="dealFlag!=null">#{dealFlag,jdbcType=INTEGER},</if>

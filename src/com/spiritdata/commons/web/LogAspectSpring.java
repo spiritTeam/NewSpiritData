@@ -26,9 +26,11 @@ import com.spiritdata.commons.logvisit.LogVisitUtils;
 import com.spiritdata.commons.logvisit.mem.LogVisitMemory;
 import com.spiritdata.commons.logvisit.persis.po.LogVisitPo;
 import com.spiritdata.commons.model.Owner;
+import com.spiritdata.commons.model.UserDeviceKey;
 import com.spiritdata.framework.util.JsonUtils;
 import com.spiritdata.framework.util.RequestUtils;
 import com.spiritdata.framework.util.StringUtils;
+import com.spiritdata.passport.session.SessionService;
 
 /**
  * 所有网络业务请求的切面。
@@ -40,6 +42,8 @@ import com.spiritdata.framework.util.StringUtils;
 public class LogAspectSpring {
     @Resource(name="serverIdentify")
     private Owner _config_SI;
+    @Resource(name="redisSessionService")
+    private SessionService sessionService;
 
     @Pointcut("execution(public * com.spiritdata.**.web.*Controller.*(..))")  
     private void controllerLog(){}//定义一个切入点，所有控制类的
@@ -56,19 +60,31 @@ public class LogAspectSpring {
         HttpServletRequest request=sra.getRequest();
         //1-获取参数
         Map<String, Object> m=RequestUtils.getDataFromRequest(request);
-        request.setAttribute("mergedParam", m);
         //2-准备日志数据
         LogVisitPo lvOp=LogVisitUtils.buildLogDataFromRequest(request);
         lvOp.setServSysType(_config_SI.getOwnerType()+"");
         lvOp.setServSysId(_config_SI.getOwnerId());
         lvOp.setVisitType(2);//在这里拦截的都是业务请求，即都是数据请求，要统一设置为2
         lvOp.setDealFlag(0);
+        //2.1-根据获得的参数填写日志数据
+        if (m!=null) lvOp.setReqParam(JsonUtils.objToJson(m));
         String errStr=LogVisitUtils.fillLogDataFromParam(lvOp, m);
+        //2.2-访问人信息默认值的设置
+        lvOp.setVisitorType("20012");
+        lvOp.setVisitorId(request.getSession().getId());
+        if (lvOp.getDeviceType()!=3) {//是设备
+            if (!StringUtils.isNullOrEmptyOrSpace(lvOp.getDeviceId())) {
+                lvOp.setVisitorType("20011");
+                lvOp.setVisitorId(lvOp.getDeviceId());
+            } else {
+                if (StringUtils.isNullOrEmptyOrSpace(errStr)) errStr="无法获得设备Id";
+                else errStr+=",无法获得设备Id";
+            }
+        }
 
         Object result=null;
         try {
-            if (m!=null) lvOp.setReqParam(JsonUtils.objToJson(m));
-            //3.1-处理注解：判断是否需要登录，获取Api名称
+            //3-处理注解：判断是否需要登录，获取Api名称
             boolean needLogin=false;
             Signature signature=pjp.getSignature();
             MethodSignature methodSignature=(MethodSignature)signature;
@@ -87,12 +103,12 @@ public class LogAspectSpring {
                     if (StringUtils.isNullOrEmptyOrSpace(apiName)) {
                         if (lvOp.getVisitType()==2) {
                             if (StringUtils.isNullOrEmptyOrSpace(errStr)) errStr="无法获得Api名称";
-                            else errStr+=","+"无法获得Api名称";
+                            else errStr+=",无法获得Api名称";
                         }
                     } else lvOp.setApiName(apiName);
                 }
             }
-            //3.2-若参数有问题
+            //4-若参数有问题
             if (!StringUtils.isNullOrEmptyOrSpace(errStr)) {
                 Map<String, Object> rm=new HashMap<String, Object>();
                 rm.put("ReturnType", "2099");
@@ -101,12 +117,18 @@ public class LogAspectSpring {
                 result=rm;
                 return result;
             }
-            //3.3-登录处理
+            //5-登录处理
+            UserDeviceKey udk=new UserDeviceKey(m);
+            if (lvOp.getDeviceType()==3) {
+                lvOp.setDeviceId(request.getSession().getId());
+                udk.setDevice(3, request.getSession().getId());
+            }
+            request.setAttribute("udKey", udk);
             boolean logined=true;
-            if (needLogin) {
-                //判断是否登录了
+            if (needLogin) {//判断是否登录了
+                
                 logined=false;
-            } else {
+            } else {//根据Session中登录的情况，重新写udk
                 
             }
             if (logined) {//成功登录或根本不需要处理是否登录
@@ -114,6 +136,7 @@ public class LogAspectSpring {
                  * 调用实际的方法
                  */
                 request.setAttribute("logData", lvOp);
+                request.setAttribute("mergedParam", m);
                 result=pjp.proceed();
             } else {//不成功登录
                 Map<String, Object> rm=new HashMap<String, Object>();
