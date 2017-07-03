@@ -16,10 +16,16 @@ public interface SessionService {
      * @return 
      */
     public Map<String, Object> dealUDkeyEntry(UserDeviceKey udk, String operDesc);
+
     /**
      * 根据给定的用户系统信息，得到记录在系统中的真实登录用户的信息，并修改参数udk中的信息
      * @param udk 用户设备Key，若有真实登录用户，此参数也会变更为真实用户的新
      * @return 真正的用户信息
      */
     public Map<String, Object> getRealLoginUdk(UserDeviceKey udk);
+
+    /**
+     * 把用户设备注册到Redis中
+     */
+    public void registUser(UserDeviceKey udk, String apiName);
 }

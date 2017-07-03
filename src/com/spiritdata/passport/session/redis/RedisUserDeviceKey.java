@@ -25,27 +25,56 @@ public class RedisUserDeviceKey extends UserDeviceKey implements RedisLoginData 
     }
 
     @Override
-    public String getKey_Lock() {
+    public String getKey_LockLogin() {
+        if (this.getSysWith()==null) throw new RuntimeException("所用系统为空，无法生成key");
+        if (StringUtils.isNullOrEmptyOrSpace(this.getSysWith().getOwnerId())) throw new RuntimeException("用户所用系统标识不能为空，无法生成key");
+        return "LockLogin_UserSys_Radom::UType_UId_SType_SId::"+getUserStr()+"_"+this.getSysWith().getOwnerType()+"_"+this.getSysWith().getOwnerId();
+    }
+
+    @Override
+    public String getKey_UserLogin_Status() {
+        checkKey();
+        return "Session_UserSysDvc_Status::UType_UId_SType_SId_DType_DId::"+this.getUserId()+"_"+this.getSysWith().getOwnerType()+"_"+this.getSysWith().getOwnerId()+"_"+this.getDevice().getDeviceType()+"_"+this.getDevice().getDeviceId();
+    }
+
+    @Override
+    public String getKey_SysDevice_User() {
+        checkKey();
+        return "Session_SysDvc_User::SType_SId_DType_DId::"+this.getSysWith().getOwnerType()+"_"+this.getSysWith().getOwnerId()+"_"+this.getDevice().getDeviceType()+"_"+this.getDevice().getDeviceId();
+    }
+
+    @Override
+    public String getKey_UserSysDType_DId() {
+        checkKey();
+        return "Session_UserSysDType_Did::UType_UId_SType_SId_DType::"+this.getSysWith().getOwnerType()+"_"+this.getSysWith().getOwnerId()+"_"+getUserStr()+"_"+this.getDevice().getDeviceType();
+    }
+
+    /**
+     * 得到用户Session Key值列表的Key
+     * @return
+     */
+    public String getKey_UserList() {
+        return "Session_UserKey_List::UType_UId::"+getUserStr();
+    }
+
+    public String getUserStr() {
         if (StringUtils.isNullOrEmptyOrSpace(this.getUserId())&&StringUtils.isNullOrEmptyOrSpace(this.getDevice().getDeviceId())) {
             throw new RuntimeException("用户Id和设备Id不能同时为空，无法生成key");
         }
-        String ret="Session_User_LoginLock=UserId_DeviceId="+this.getUserId()+"_"+this.getDevice().getDeviceId();
+        String ret="";
+        if (!StringUtils.isNullOrEmptyOrSpace(this.getUserId())) ret+="20000_"+this.getUserId();
+        else {
+            if (this.getDevice().getDeviceType()==DeviceType.PC) ret+="20012_"+this.getDevice().getDeviceId();
+            else
+            if (this.getDevice().getDeviceType()==DeviceType.MOBILE||this.getDevice().getDeviceType()==DeviceType.MYDVC) ret+="20011_"+this.getDevice().getDeviceId();
+            else
+            throw new RuntimeException("设备类型不合法，无法生成key");
+        }
         return ret;
     }
-
-    @Override
-    public String getKey_UserLoginStatus() {
-        if (StringUtils.isNullOrEmptyOrSpace(this.getSysWith().getOwnerId())) {
-            throw new RuntimeException("用户所用系统标识不能为空，无法生成key");
-        }
-        return "Session_User_Login=UserId_DType_DId_SType_SId=="+this.getUserId()+"_"+this.getDevice().getDeviceType()+"_"+this.getDevice().getDeviceId()+"_"+this.getSysWith().getOwnerType()+"_"+this.getSysWith().getOwnerId();
-    }
-
-    @Override
-    public String getKey_DeviceSys_UserId() {
-        if (StringUtils.isNullOrEmptyOrSpace(this.getDevice().getDeviceId())||StringUtils.isNullOrEmptyOrSpace(this.getSysWith().getOwnerId())) {
-            throw new RuntimeException("设备Id或系统标识不为空");
-        }
-        return "Session_LoginDeviceSys_UserId=DType_DId_SType_SId="+this.getDevice().getDeviceType()+"_"+this.getDevice().getDeviceId()+"_"+this.getSysWith().getOwnerType()+"_"+this.getSysWith().getOwnerId();
+    private void checkKey() {
+        if (this.getDevice()==null) throw new RuntimeException("设备类型为空，无法生成key");
+        if (this.getSysWith()==null) throw new RuntimeException("所用系统为空，无法生成key");
+        if (StringUtils.isNullOrEmptyOrSpace(this.getSysWith().getOwnerId())) throw new RuntimeException("用户所用系统标识不能为空，无法生成key");
     }
 }

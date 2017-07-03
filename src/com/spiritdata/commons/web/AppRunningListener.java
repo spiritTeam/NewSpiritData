@@ -13,6 +13,7 @@ public class AppRunningListener implements ServletContextListener {
     //初始化
     public void contextInitialized(ServletContextEvent arg0) {
         try {
+            Thread.sleep(3000);//等待spring加载完成
             //启动数据收集数据
             LogVisitListener.begin();
         } catch(Exception e) {

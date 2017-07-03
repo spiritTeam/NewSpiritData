@@ -45,11 +45,11 @@ public class UserLoginService {
      * @param imei 手机串号
      * @param PCDType 设备类型
      */
-    public UserLoginPo getUserUsedInDevice(String deviceId, int deviceType, String sysType, String sysId) {
+    public UserLoginPo getUserUsedInDevice(int sysType, String sysId, int deviceType, String deviceId) {
         Map<String, Object> paraM=new HashMap<String, Object>();
-        paraM.put("deviceType", deviceType);
+        paraM.put("deviceType", deviceType+"");
         paraM.put("deviceId", deviceId);
-        paraM.put("sysType", sysType);
+        paraM.put("sysType", sysType+"");
         paraM.put("sysId", sysId);
         return ulDao.getInfoObject("getUserUsedInDevice", paraM);
     }

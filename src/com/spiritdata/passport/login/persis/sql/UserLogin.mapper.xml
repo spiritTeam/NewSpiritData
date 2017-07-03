@@ -4,7 +4,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="USERLOGIN">
   <!-- 对象定义:手机用户使用 -->
-  <resultMap id="BaseResultMap" type="UserLogin">
+  <resultMap id="BaseMap" type="UserLogin">
     <id      column="id"          property="ulId"        jdbcType="VARCHAR"/>
     <result  column="sysType"     property="sysType"     jdbcType="VARCHAR"/>
     <result  column="sysId"       property="sysId"       jdbcType="VARCHAR"/>
@@ -12,27 +12,25 @@
     <result  column="deviceType"  property="deviceType"  jdbcType="INTEGER"/>
     <result  column="deviceId"    property="deviceId"    jdbcType="VARCHAR"/>
     <result  column="status"      property="status"      jdbcType="INTEGER"/>
-    <result  column="expire"      property="expire"      jdbcType="INTEGER"/>
     <result  column="lmTime"      property="lmTime"      jdbcType="TIMESTAMP"/>
   </resultMap>
 
   <!-- 所有列 -->
   <sql id="Base_Column_List">
-    id, sysType, sysId, userId, deviceType, deviceId, status, expire, lmTime
+    id, sysType, sysId, userId, deviceType, deviceId, status, lmTime
   </sql>
 
   <!-- 条件子句 -->
   <sql id="WhereClauseByEntiey">
     <where>
       <trim prefix="(" suffix=")" prefixOverrides="and">
-        <if test="id!=null"> and id=#{ulId,jdbcType=VARCHAR}</if>
+        <if test="ulId!=null"> and id=#{ulId,jdbcType=VARCHAR}</if>
         <if test="sysType!=null"> and sysType=#{sysType,jdbcType=VARCHAR}</if>
         <if test="sysId!=null"> and sysId=#{sysId,jdbcType=VARCHAR}</if>
         <if test="userId!=null"> and userId=#{userId,jdbcType=VARCHAR}</if>
         <if test="deviceType!=null and deviceType!=0"> and deviceType=#{deviceType,jdbcType=INTEGER}</if>
         <if test="deviceId!=null"> and deviceId=#{deviceId,jdbcType=VARCHAR}</if>
         <if test="status!=null and status!=0"> and status=#{status,jdbcType=INTEGER}</if>
-        <if test="expire!=null and expire!=0"> and expire=#{expire,jdbcType=INTEGER}</if>
         <if test="lmTime!=null"> and lmTime=#{lmTime,jdbcType=TIMESTAMP}</if>
       </trim>
     </where>
@@ -69,18 +67,24 @@
   <insert id="insert" parameterType="java.util.Map">
     insert into plat_UserLogin
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="muId!=null">id,</if>
-      <if test="imei!=null">imei,</if>
-      <if test="PCDType!=null and PCDType!=0">pcdType,</if>
+      <if test="ulId!=null">id,</if>
+      <if test="sysType!=null">sysType,</if>
+      <if test="sysId!=null">sysId,</if>
       <if test="userId!=null">userId,</if>
+      <if test="deviceType!=null and deviceType!=0">deviceType,</if>
+      <if test="deviceId!=null">deviceId,</if>
       <if test="status!=null and status!=0">status,</if>
+      <if test="lmTime!=null">lmTime</if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="muId!=null">#{muId,jdbcType=VARCHAR},</if>
-      <if test="imei!=null">#{imei,jdbcType=VARCHAR},</if>
-      <if test="PCDType!=null and PCDType!=0">#{PCDType,jdbcType=INTEGER},</if>
-      <if test="userId!=null">#{userId,jdbcType=VARCHAR},</if>
-      <if test="status!=null and status!=0">#{status,jdbcType=INTEGER},</if>
+      <if test="id!=null">id=#{ulId,jdbcType=VARCHAR},</if>
+      <if test="sysType!=null">sysType=#{sysType,jdbcType=VARCHAR},</if>
+      <if test="sysId!=null">sysId=#{sysId,jdbcType=VARCHAR},</if>
+      <if test="userId!=null">userId=#{userId,jdbcType=VARCHAR},</if>
+      <if test="deviceType!=null and deviceType!=0">deviceType=#{deviceType,jdbcType=INTEGER},</if>
+      <if test="deviceId!=null">deviceId=#{deviceId,jdbcType=VARCHAR},</if>
+      <if test="status!=null and status!=0">status=#{status,jdbcType=INTEGER},</if>
+      <if test="lmTime!=null">lmTime=#{lmTime,jdbcType=TIMESTAMP},</if>
     </trim>
   </insert>
 
@@ -99,17 +103,17 @@
     where id=#{id,jdbcType=VARCHAR}
   </update>
 
-  <!-- 修改 根据deviceId-->
-  <update id="updateByDeviceId" parameterType="java.util.Map">
+  <!-- 修改 修改登录状态-->
+  <update id="updateByBizKey" parameterType="java.util.Map">
     update plat_UserLogin set status=#{status,jdbcType=INTEGER}
-    where deviceId=#{deviceId,jdbcType=VARCHAR} and pcdType=#{PCDType,jdbcType=INTEGER} and userId=#{userId,jdbcType=VARCHAR}
+    where deviceId=#{deviceId,jdbcType=VARCHAR} and deviceType=#{deviceType,jdbcType=INTEGER} and userId=#{userId,jdbcType=VARCHAR}
     and sysId=#{sysId,jdbcType=VARCHAR} and sysType=#{sysType,jdbcType=VARCHAR}
   </update>
   <!-- 调整用户登录情况，设置为被踢出
     1-第一个Sql，把在其他设备上的同一系统(App)的本用户的登录设置为被踢出
     2-第二个Sql，把在相同设备上的同一系统(App)的非本用户登录设置为被踢出
   -->
-  <update id="adjustByDeviceId" parameterType="java.util.Map">
+  <update id="adjustOnLoginOk" parameterType="java.util.Map">
     update plat_UserLogin set status=3
       where deviceId!=#{deviceId,jdbcType=VARCHAR} and deviceType=#{deviceType,jdbcType=INTEGER} and userId=#{userId,jdbcType=VARCHAR} and status=1
       and sysId=#{sysId,jdbcType=VARCHAR} and sysType=#{sysType,jdbcType=VARCHAR};

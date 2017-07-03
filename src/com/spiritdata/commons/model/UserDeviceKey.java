@@ -52,7 +52,6 @@ public class UserDeviceKey extends BaseObject implements Serializable {
         try { tempInt=Integer.parseInt(tempStr); } catch(Exception e) {};
         if (DeviceType.buildDtByType(tempInt)==DeviceType.ERR) throw new IllegalArgumentException("从Map中无法正确获得设备类型");
         //2.2-设备Id
-        if (tempInt!=3&&StringUtils.isNullOrEmptyOrSpace(tempStr)) throw new IllegalArgumentException("从Map中无法正确获得设备信息");
         tempStr=m.get("DeviceId")==null?null:m.get("DeviceId")+"";
         this.device=new Device(tempInt, tempStr);
 

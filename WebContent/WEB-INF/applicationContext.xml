@@ -17,6 +17,9 @@
     </property>
   </bean>
   <!-- 以下配置类加载 -->
+  <bean id="gConfig" class="com.spiritdata.GlobalConfig" scope="singleton">
+    <property name="loginsession" value="${_TIMEOUT.loginSession}"/>
+  </bean>
   <bean id="serverIdentify" class="com.spiritdata.commons.model.Owner" scope="singleton">
     <property name="ownerType" value="${_SI.serverType}"/>
     <property name="ownerId" value="${_SI.serverId}"/>
@@ -26,16 +29,16 @@
   <!-- 正式库 -->
   <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close" lazy-init="false">
     <property name="driverClassName" value="${_DB.jdbc.mysql.driverClassName}"/>
-    <property name="url" value="${_DB.mainDB.jdbc.mysql.url}"/>
-    <property name="username" value="${_DB.mainDB.jdbc.mysql.username}"/>
-    <property name="password" value="${_DB.mainDB.jdbc.mysql.password}"/>
-    <property name="initialSize" value="30"/>
-    <property name="maxActive" value="50"/>
-    <property name="maxWait" value="60000"/>
-    <property name="poolPreparedStatements" value="true"/>
-    <property name="maxOpenPreparedStatements" value="30"/>
-    <property name="testOnBorrow"><value>false</value></property>
-    <property name="validationQuery"><value>select 1 from dual</value></property>
+    <property name="url" value="${_DB.main.jdbc.mysql.url}"/>
+    <property name="username" value="${_DB.main.jdbc.mysql.username}"/>
+    <property name="password" value="${_DB.main.jdbc.mysql.password}"/>
+    <property name="initialSize" value="${_DB.pool.initialSize}"/>
+    <property name="maxActive" value="${_DB.pool.maxActive}"/>
+    <property name="maxWait" value="${_DB.pool.maxWait}"/>
+    <property name="poolPreparedStatements" value="${_DB.pool.poolPreparedStatements}"/>
+    <property name="maxOpenPreparedStatements" value="${_DB.pool.maxOpenPreparedStatements}"/>
+    <property name="testOnBorrow" value="${_DB.pool.testOnBorrow}"/>
+    <property name="validationQuery" value="select 1 from dual"/>
   </bean>
   <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
     <property name="dataSource" ref="dataSource"/>
@@ -55,6 +58,22 @@
   </bean>
   <bean id="defaultDAO" class="com.spiritdata.framework.core.dao.mybatis.MybatisDAO" scope="prototype" init-method="initialize">
     <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+  </bean>
+
+  <!-- Redis连接池配置 -->
+  <bean id="redisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+    <property name="maxTotal" value="${_REDIS.pool.maxTotal}"/>
+    <property name="maxIdle" value="${_REDIS.pool.maxIdle}"/>
+    <property name="maxWaitMillis" value="${_REDIS.pool.maxWaitMillis}"/>
+    <property name="testOnBorrow" value="${_REDIS.pool.testOnBorrow}"/>
+    <property name="testOnReturn" value="${_REDIS.pool.testOnReturn}"/>
+  </bean>
+  <!-- Redis连接配置 -->
+  <bean id="mainRedis" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+    <property name="hostName" value="${_REDIS.main.host}"/>
+    <property name="port" value="${_REDIS.main.port}"/>
+    <property name="password" value="${_REDIS.main.password}"/>
+    <property name="poolConfig" ref="redisPoolConfig"/>
   </bean>
 
   <!-- 以下为UGA框架所需配置 -->

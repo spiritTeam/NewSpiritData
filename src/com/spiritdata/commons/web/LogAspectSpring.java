@@ -56,7 +56,7 @@ public class LogAspectSpring {
     public Object doAround(ProceedingJoinPoint pjp) throws Throwable {
         //0-获得Request
         RequestAttributes ra=RequestContextHolder.getRequestAttributes();
-        ServletRequestAttributes sra=(ServletRequestAttributes) ra;
+        ServletRequestAttributes sra=(ServletRequestAttributes)ra;
         HttpServletRequest request=sra.getRequest();
         //1-获取参数
         Map<String, Object> m=RequestUtils.getDataFromRequest(request);
@@ -90,6 +90,7 @@ public class LogAspectSpring {
             MethodSignature methodSignature=(MethodSignature)signature;
             Method targetMethod=methodSignature.getMethod();
             Annotation[] aArray=targetMethod.getAnnotations();
+            String apiName=null;
             if (aArray!=null&&aArray.length>0) {
                 int i=0;
                 for (; i<aArray.length; i++) if (aArray[i] instanceof NeedLogin) break;
@@ -99,7 +100,7 @@ public class LogAspectSpring {
                 for (; i<aArray.length; i++) if (aArray[i] instanceof ApiName) break;
                 if (i<aArray.length) a=aArray[i];
                 if (a!=null) {
-                    String apiName=((ApiName)a).value();
+                    apiName=((ApiName)a).value();
                     if (StringUtils.isNullOrEmptyOrSpace(apiName)) {
                         if (lvOp.getVisitType()==2) {
                             if (StringUtils.isNullOrEmptyOrSpace(errStr)) errStr="无法获得Api名称";
@@ -114,8 +115,7 @@ public class LogAspectSpring {
                 rm.put("ReturnType", "2099");
                 rm.put("Message", errStr);
                 lvOp.setDealFlag(2);//处理异常
-                result=rm;
-                return result;
+                return rm;
             }
             //5-登录处理
             UserDeviceKey udk=new UserDeviceKey(m);
@@ -123,25 +123,43 @@ public class LogAspectSpring {
                 lvOp.setDeviceId(request.getSession().getId());
                 udk.setDevice(3, request.getSession().getId());
             }
-            request.setAttribute("udKey", udk);
             boolean logined=true;
+            Map<String, Object> retMap=null;
+            String errMsg=null;
             if (needLogin) {//判断是否登录了
-                
-                logined=false;
+                retMap=sessionService.dealUDkeyEntry(udk, apiName);
+                if (retMap==null||retMap.get("ReturnType")==null) throw new Exception("判断是否登录成功方法出现未知错误");
+                if ((retMap.get("ReturnType")+"").startsWith("2")) return retMap;
+                if ("1001".equals(retMap.get("ReturnMap"))) {
+                    udk=(UserDeviceKey)retMap.get("UDK");
+                    if (retMap.get("UserId")!=null) request.setAttribute("UserId", retMap.get("UserId"));
+                    if (retMap.get("UserInfo")!=null) request.setAttribute("UserInfo", retMap.get("UserInfo"));
+                } else {
+                    logined=false;
+                    errMsg=retMap.get("Message")+"";
+                }
             } else {//根据Session中登录的情况，重新写udk
-                
+                retMap=sessionService.getRealLoginUdk(udk);
+                if (retMap==null||retMap.get("ReturnType")==null) throw new Exception("得到真实用户设备系统Key方法出现未知错误");
+                if ((retMap.get("ReturnType")+"").startsWith("2")) {
+                    return retMap;
+                } else 
+                if ("1001".equals(retMap.get("ReturnMap"))) {
+                    udk=(UserDeviceKey)retMap.get("UDK");
+                }
             }
+            request.setAttribute("udKey", udk);
             if (logined) {//成功登录或根本不需要处理是否登录
                 /**
                  * 调用实际的方法
                  */
-                request.setAttribute("logData", lvOp);
                 request.setAttribute("mergedParam", m);
                 result=pjp.proceed();
             } else {//不成功登录
                 Map<String, Object> rm=new HashMap<String, Object>();
                 rm.put("ReturnType", "0000");
                 rm.put("Message", "需要登录");
+                if (!StringUtils.isNullOrEmptyOrSpace(errMsg)) rm.put("Message", errMsg);
                 result=rm;
             }
             
