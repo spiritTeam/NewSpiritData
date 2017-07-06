@@ -10,6 +10,7 @@
 >
   <!-- 读取数据库配置信息 -->
   <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+    <property name="fileEncoding" value="UTF-8"/>
     <property name="locations">
       <list merge="default">
         <value>/WEB-INF/config.properties</value>
@@ -24,6 +25,12 @@
     <property name="ownerType" value="${_SI.serverType}"/>
     <property name="ownerId" value="${_SI.serverId}"/>
     <property name="ownerName" value="${_SI.serverName}"/>
+  </bean>
+  <bean id="smsConfig" class="com.spiritdata.plugins.sms.ali.AliSmsConfig" scope="singleton">
+    <property name="accessKeyId" value="${_SMS.ali.accessKeyId}"/>
+    <property name="accessKeySecret" value="${_SMS.ali.accessKeySecret}"/>
+    <property name="signName" value="${_SMS.ali.signName}"/>
+    <property name="templateCode" value="${_SMS.ali.templateCode}"/>
   </bean>
 
   <!-- 正式库 -->

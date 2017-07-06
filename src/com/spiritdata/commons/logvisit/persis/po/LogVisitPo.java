@@ -42,6 +42,7 @@ public class LogVisitPo extends BaseObject {
     private String objType; //主对象类型，是数据库模型中主对象的编号
     private String objId; //访问实体的ID
     private int dealFlag; //处理过程0正在处理1处理成功2处理失败
+    private String returnData; //返回数据Json格式，最长4000字符
     private Timestamp beginTime; //开始处理时间，或操作点操作时间
     private Timestamp endTime; //结束处理时间
 
@@ -206,6 +207,12 @@ public class LogVisitPo extends BaseObject {
     }
     public void setDealFlag(int dealFlag) {
         this.dealFlag=dealFlag;
+    }
+    public String getReturnData() {
+        return returnData;
+    }
+    public void setReturnData(String returnData) {
+        this.returnData=returnData.length()>4000?returnData.substring(0,4000)+"...":returnData;
     }
     public Timestamp getBeginTime() {
         return beginTime;

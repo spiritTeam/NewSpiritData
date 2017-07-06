@@ -34,19 +34,19 @@ public class RedisUserDeviceKey extends UserDeviceKey implements RedisLoginData 
     @Override
     public String getKey_UserLogin_Status() {
         checkKey();
-        return "Session_UserSysDvc_Status::UType_UId_SType_SId_DType_DId::"+this.getUserId()+"_"+this.getSysWith().getOwnerType()+"_"+this.getSysWith().getOwnerId()+"_"+this.getDevice().getDeviceType()+"_"+this.getDevice().getDeviceId();
+        return "Session_UserSysDvc_Status::UType_UId_SType_SId_DType_DId::"+this.getUserStr()+"_"+this.getSysWith().getOwnerType()+"_"+this.getSysWith().getOwnerId()+"_"+this.getDevice().toString();
     }
 
     @Override
     public String getKey_SysDevice_User() {
         checkKey();
-        return "Session_SysDvc_User::SType_SId_DType_DId::"+this.getSysWith().getOwnerType()+"_"+this.getSysWith().getOwnerId()+"_"+this.getDevice().getDeviceType()+"_"+this.getDevice().getDeviceId();
+        return "Session_SysDvc_User::SType_SId_DType_DId::"+this.getSysWith().getOwnerType()+"_"+this.getSysWith().getOwnerId()+"_"+this.getDevice().toString();
     }
 
     @Override
     public String getKey_UserSysDType_DId() {
         checkKey();
-        return "Session_UserSysDType_Did::UType_UId_SType_SId_DType::"+this.getSysWith().getOwnerType()+"_"+this.getSysWith().getOwnerId()+"_"+getUserStr()+"_"+this.getDevice().getDeviceType();
+        return "Session_UserSysDType_Did::UType_UId_SType_SId_DType::"+this.getSysWith().getOwnerType()+"_"+this.getSysWith().getOwnerId()+"_"+getUserStr()+"_"+this.getDevice().getDeviceType().getType();
     }
 
     /**

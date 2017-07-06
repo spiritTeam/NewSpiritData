@@ -17,7 +17,7 @@ public class LogVisitListener extends Thread {
      * 启动“访问日志”数据收集监听线程
      */
     public static void begin() {
-        LogVisitListener lvl = new LogVisitListener();
+        LogVisitListener lvl=new LogVisitListener();
         lvl.setName("“访问日志”数据收集监听");
         lvl.start();
     }
@@ -27,7 +27,7 @@ public class LogVisitListener extends Thread {
      */
     @Override
     public void run() {
-        LogVisitMemory agm = LogVisitMemory.getInstance();
+        LogVisitMemory agm=LogVisitMemory.getInstance();
         int i=0;
         while (this.lvService==null&&i++<5) {
             try {

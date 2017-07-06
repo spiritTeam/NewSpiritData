@@ -14,7 +14,7 @@ import java.util.concurrent.BlockingQueue;
 public class LogVisitMemory {
     //java的占位单例模式===begin
     private static class InstanceHolder {
-        public static LogVisitMemory instance = new LogVisitMemory();
+        public static LogVisitMemory instance=new LogVisitMemory();
     }
     public static LogVisitMemory getInstance() {
         InstanceHolder.instance.init();
@@ -22,7 +22,7 @@ public class LogVisitMemory {
     }
 
     //信息收集队列：访问日志数据收集后先放入本队列，之后再由一个线程把他写入持久化中，目前是数据库
-    protected BlockingQueue<LogVisitPo> logDataQueue = null;
+    protected BlockingQueue<LogVisitPo> logDataQueue=null;
 
     /**
      * 参数初始化，必须首先执行这个方法

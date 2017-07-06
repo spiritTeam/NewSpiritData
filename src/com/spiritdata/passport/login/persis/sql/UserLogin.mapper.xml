@@ -4,7 +4,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="USERLOGIN">
   <!-- 对象定义:手机用户使用 -->
-  <resultMap id="BaseMap" type="UserLogin">
+  <resultMap id="BaseResultMap" type="UserLogin">
     <id      column="id"          property="ulId"        jdbcType="VARCHAR"/>
     <result  column="sysType"     property="sysType"     jdbcType="VARCHAR"/>
     <result  column="sysId"       property="sysId"       jdbcType="VARCHAR"/>
@@ -77,14 +77,14 @@
       <if test="lmTime!=null">lmTime</if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id!=null">id=#{ulId,jdbcType=VARCHAR},</if>
-      <if test="sysType!=null">sysType=#{sysType,jdbcType=VARCHAR},</if>
-      <if test="sysId!=null">sysId=#{sysId,jdbcType=VARCHAR},</if>
-      <if test="userId!=null">userId=#{userId,jdbcType=VARCHAR},</if>
-      <if test="deviceType!=null and deviceType!=0">deviceType=#{deviceType,jdbcType=INTEGER},</if>
-      <if test="deviceId!=null">deviceId=#{deviceId,jdbcType=VARCHAR},</if>
-      <if test="status!=null and status!=0">status=#{status,jdbcType=INTEGER},</if>
-      <if test="lmTime!=null">lmTime=#{lmTime,jdbcType=TIMESTAMP},</if>
+      <if test="id!=null">#{ulId,jdbcType=VARCHAR},</if>
+      <if test="sysType!=null">#{sysType,jdbcType=VARCHAR},</if>
+      <if test="sysId!=null">#{sysId,jdbcType=VARCHAR},</if>
+      <if test="userId!=null">#{userId,jdbcType=VARCHAR},</if>
+      <if test="deviceType!=null and deviceType!=0">#{deviceType,jdbcType=INTEGER},</if>
+      <if test="deviceId!=null">#{deviceId,jdbcType=VARCHAR},</if>
+      <if test="status!=null and status!=0">#{status,jdbcType=INTEGER},</if>
+      <if test="lmTime!=null">#{lmTime,jdbcType=TIMESTAMP},</if>
     </trim>
   </insert>
 

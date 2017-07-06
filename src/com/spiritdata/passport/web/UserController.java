@@ -2,7 +2,6 @@ package com.spiritdata.passport.web;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -18,13 +17,11 @@ import com.spiritdata.framework.core.lock.BlockLockConfig;
 import com.spiritdata.framework.core.lock.ExpirableBlockKey;
 import com.spiritdata.framework.ext.redis.lock.RedisBlockLock;
 import com.spiritdata.framework.ext.spring.redis.RedisOperService;
-import com.spiritdata.framework.util.SpiritRandom;
 import com.spiritdata.framework.util.StringUtils;
 import com.spiritdata.passport.UGA.persis.po.UserPo;
 import com.spiritdata.passport.UGA.service.UserService;
 import com.spiritdata.passport.session.SessionService;
 import com.spiritdata.passport.session.redis.RedisUserDeviceKey;
-import com.spiritdata.plugins.sms.ali.AliSMS;
 
 @Controller
 @RequestMapping(value="/passport/user/")
@@ -159,11 +156,6 @@ public class UserController {
         Map<String, Object> m=(Map<String, Object>)request.getAttribute("mergedParam");
         if (m==null||m.isEmpty()) throw new Exception("参数为空，无法处理");
 
-        AliSMS aliSms=new AliSMS();
-        int random=SpiritRandom.getRandom(new Random(), 1000000, 1999999);
-        String checkNum1=(random+"").substring(1);
-        aliSms.sendSms("13910672205", checkNum1, "测试");
-
         String tempStr=null;
         //一、获取参数
         //1-登录类型——是否使用验证图片，是否使用手机验证码。
@@ -269,6 +261,7 @@ public class UserController {
      */
     @RequestMapping(value="register.do")
     @ResponseBody
+    @ApiName("2.1.3-个人用户信息注册")
     public Map<String,Object> register(HttpServletRequest request) {
         Map<String, Object> o=new HashMap<String, Object>();
         System.out.println("切片测试=================");

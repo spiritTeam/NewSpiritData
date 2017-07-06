@@ -42,13 +42,14 @@
     <result column="objId"          property="objId"          jdbcType="VARCHAR"/>
 
     <result column="dealFlag"       property="dealFlag"       jdbcType="INTEGER"/>
+    <result column="returnData"     property="returnData"     jdbcType="VARCHAR"/>
     <result column="beginTime"      property="beginTime"      jdbcType="TIMESTAMP"/>
     <result column="endTime"        property="endTime"        jdbcType="TIMESTAMP"/>
   </resultMap>
 
   <!-- 所有列 -->
   <sql id="Base_Column_List">
-    id, servSysType, servSysId, visitType, visitSysType, visitSysId, visitModuleId, visitorType, visitorId, clientIp, pointInfo, deviceType, deviceId, deviceClass, screenSzie, exploreName, exploreVer, OSName, OSVer, apiName, fromUrl, reqUrl, method, reqParam, objType, objId, dealFlag, beginTime, endTime
+    id, servSysType, servSysId, visitType, visitSysType, visitSysId, visitModuleId, visitorType, visitorId, clientIp, pointInfo, deviceType, deviceId, deviceClass, screenSzie, exploreName, exploreVer, OSName, OSVer, apiName, fromUrl, reqUrl, method, reqParam, objType, objId, dealFlag, returnData, beginTime, endTime
   </sql>
 
   <!-- 新增数据 -->
@@ -82,6 +83,7 @@
       <if test="objType!=null">objType,</if>
       <if test="objId!=null">objId,</if>
       <if test="dealFlag!=null">dealFlag,</if>
+      <if test="returnData!=null">returnData,</if>
       <if test="beginTime!=null">beginTime,</if>
       <if test="endTime!=null">endTime,</if>
     </trim>
@@ -113,6 +115,7 @@
       <if test="objType!=null">#{objType,jdbcType=VARCHAR},</if>
       <if test="objId!=null">#{objId,jdbcType=VARCHAR},</if>
       <if test="dealFlag!=null">#{dealFlag,jdbcType=INTEGER},</if>
+      <if test="returnData!=null">#{returnData,jdbcType=INTEGER},</if>
       <if test="beginTime!=null">#{beginTime,jdbcType=TIMESTAMP},</if>
       <if test="endTime!=null">#{endTime,jdbcType=TIMESTAMP},</if>
     </trim>

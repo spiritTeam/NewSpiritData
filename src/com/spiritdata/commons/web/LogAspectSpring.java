@@ -115,6 +115,7 @@ public class LogAspectSpring {
                 rm.put("ReturnType", "2099");
                 rm.put("Message", errStr);
                 lvOp.setDealFlag(2);//处理异常
+                lvOp.setReturnData(JsonUtils.objToJson(rm));
                 return rm;
             }
             //5-登录处理
@@ -142,6 +143,7 @@ public class LogAspectSpring {
                 retMap=sessionService.getRealLoginUdk(udk);
                 if (retMap==null||retMap.get("ReturnType")==null) throw new Exception("得到真实用户设备系统Key方法出现未知错误");
                 if ((retMap.get("ReturnType")+"").startsWith("2")) {
+                    lvOp.setReturnData(JsonUtils.objToJson(retMap));
                     return retMap;
                 } else 
                 if ("1001".equals(retMap.get("ReturnMap"))) {
@@ -176,6 +178,7 @@ public class LogAspectSpring {
             result=rm;
         } finally {
             //记录日志，收集数据
+            if (result!=null) lvOp.setReturnData(JsonUtils.objToJson(result));;
             lvOp.setEndTime(new Timestamp(System.currentTimeMillis()));
             try {
                 LogVisitMemory.getInstance().put2Queue(lvOp);

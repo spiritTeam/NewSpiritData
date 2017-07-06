@@ -3,6 +3,7 @@ package com.spiritdata.passport.UGA.service;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
+import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
 import com.spiritdata.GlobalConfig;
@@ -14,12 +15,13 @@ import com.spiritdata.passport.UGA.persis.po.UserPo;
 import com.spiritdata.passport.login.persis.po.UserLoginPo;
 import com.spiritdata.passport.session.redis.RedisUserDeviceKey;
 
+@Service
 public class UserService implements UgaUserService {
     @Resource(name="defaultDAO")
     private MybatisDAO<UserPo> userDao;
     @Resource(name="defaultDAO")
     private MybatisDAO<UserLoginPo> userLoginDao;
-    @Resource(name="cConfig")
+    @Resource(name="gConfig")
     private GlobalConfig gConfig;
 
     @PostConstruct

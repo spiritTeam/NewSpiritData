@@ -19,10 +19,10 @@ public class GlobalConfig {
         return loginsession;
     }
 
-    public void setLoginsession(int loginsession) {
+    public void setLoginsession(String loginsession) {
         this.loginsession=30*60*1000;
         try {
-            this.loginsession=(int)fel.eval(loginsession+"");
+            this.loginsession=(int)fel.eval(loginsession);
         } catch(Exception e) {}
     }
 }

@@ -32,7 +32,7 @@ public class RedisSessionService implements SessionService {
     private UserService userService;
     @Resource
     private UserLoginService ulService;
-    @Resource(name="cConfig")
+    @Resource(name="gConfig")
     private GlobalConfig gConfig;
 
     @Override
