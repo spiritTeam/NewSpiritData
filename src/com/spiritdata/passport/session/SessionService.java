@@ -28,4 +28,9 @@ public interface SessionService {
      * 把用户设备注册到Redis中
      */
     public void registUser(UserDeviceKey udk, String apiName);
+
+    /**
+     * 用户注销，把存在Redis中的信息删除掉
+     */
+    public void logout(UserDeviceKey udk);
 }

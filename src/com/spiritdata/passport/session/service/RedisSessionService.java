@@ -172,6 +172,18 @@ public class RedisSessionService implements SessionService {
     }
 
     @Override
+    public void logout(UserDeviceKey udk) {
+        RedisUserDeviceKey rUdk=new RedisUserDeviceKey(udk);
+        RedisOperService roService=new RedisOperService(redisConn, 2);
+        try {
+            cleanOneSession(rUdk, roService);
+        } finally {
+            if (roService!=null) roService.close();
+            roService=null;
+        }
+    }
+
+    @Override
     public void registUser(UserDeviceKey udk, String apiName) {
         RedisUserDeviceKey rUdk=new RedisUserDeviceKey(udk);
         RedisOperService roService=new RedisOperService(redisConn, 2);
@@ -206,6 +218,7 @@ public class RedisSessionService implements SessionService {
 
     private void addOneSession(RedisUserDeviceKey rUdk, RedisOperService ros, String operDesc) {
         ros.rPush(rUdk.getKey_UserList(), rUdk.getKey_UserLogin_Status(), rUdk.getKey_SysDevice_User(), rUdk.getKey_UserSysDType_DId());
+        ros.pExpire(rUdk.getKey_UserList(), gConfig.getLoginsession());
         ros.set(rUdk.getKey_UserLogin_Status(), operDesc);
         ros.pExpire(rUdk.getKey_UserLogin_Status(), gConfig.getLoginsession());
         ros.set(rUdk.getKey_SysDevice_User(), rUdk.getUserStr());

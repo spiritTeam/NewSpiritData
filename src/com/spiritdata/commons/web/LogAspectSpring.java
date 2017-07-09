@@ -164,7 +164,12 @@ public class LogAspectSpring {
                 if (!StringUtils.isNullOrEmptyOrSpace(errMsg)) rm.put("Message", errMsg);
                 result=rm;
             }
-            
+            String oldUserId=udk.getUserId();
+            udk=(UserDeviceKey)request.getAttribute("udKey");
+            if (udk!=null&&udk.getUserId().equals(oldUserId)&&oldUserId==null) {
+                lvOp.setVisitorType("20000");
+                lvOp.setVisitorType(udk.getUserId());
+            }
             lvOp.setDealFlag(2);//处理失败
             if ((result instanceof Map)&&((((Map)result).get("ReturnType")+"").equals("1001"))) {
                 lvOp.setDealFlag(1);//处理成功

@@ -77,7 +77,7 @@
       <if test="lmTime!=null">lmTime</if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id!=null">#{ulId,jdbcType=VARCHAR},</if>
+      <if test="ulId!=null">#{ulId,jdbcType=VARCHAR},</if>
       <if test="sysType!=null">#{sysType,jdbcType=VARCHAR},</if>
       <if test="sysId!=null">#{sysId,jdbcType=VARCHAR},</if>
       <if test="userId!=null">#{userId,jdbcType=VARCHAR},</if>

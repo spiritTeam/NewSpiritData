@@ -19,7 +19,6 @@ public class CheckCodeService {
     @Resource(name="mainRedis")
     JedisConnectionFactory redisConn;
 
-    
     /**
      * 生成验证码，并通过短信发给用户
      * @param bizStr 业务描述
@@ -49,8 +48,7 @@ public class CheckCodeService {
 
     /**
      * 检查验证码是否争取
-     * @param ctype 处理类型：0=不做任何额外处理;1=检查后立即让验证码失效
-     * @param bizStr 业务描述
+     * @param bc 业务描述
      * @param userId 用户信息
      * @param phoneNum 用户手机号码
      * @param checkCode 用户所传来的验证码
